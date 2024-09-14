@@ -296,17 +296,21 @@ export default function App() {
 				{formIsOpen && (
 					<motion.div
 						id='widget-container'
-						initial={{ opacity: 0, y: 50 }}
-						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: 20 }}
-						className='fixed bottom-20 right-5 bg-background rounded-lg shadow-lg p-6 w-[28rem] mx-auto'>
-						<AnimatePresence mode='wait'>
-							{!isLoading
-								? isSubmitted
-									? submittedLayout
-									: preSubmitLayout
-								: loadingLayout}
-						</AnimatePresence>
+						className='relative' // Make sure the wrapper stays fixed
+					>
+						<motion.div
+							initial={{ opacity: 0, y: 50 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
+							className='fixed bottom-20 right-5 bg-background/50 rounded-lg shadow-lg p-6 w-[28rem] mx-auto backdrop-blur-2xl supports-[backdrop-filter]:bg-background/55'>
+							<AnimatePresence mode='wait'>
+								{!isLoading
+									? isSubmitted
+										? submittedLayout
+										: preSubmitLayout
+									: loadingLayout}
+							</AnimatePresence>
+						</motion.div>
 					</motion.div>
 				)}
 			</AnimatePresence>
