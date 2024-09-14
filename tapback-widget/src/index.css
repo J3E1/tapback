@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--primary: 240 5.9% 10%;
+		--typography: 240 5.9% 10%;
+		--primary-foreground: 0 0% 98%;
+		--muted: 240 3.8% 66.1%;
+		--destructive: 0 84.2% 60.2%;
+		--radius: 0.5rem;
+	}
+}
