@@ -28,7 +28,7 @@ export function ProjectSwitcher({ projects }: ProjectSwitcherProps) {
 		<Select defaultValue={selectedProject} onValueChange={setSelectedProject}>
 			<SelectTrigger
 				className={cn(
-					'flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex lg:[&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&>svg]:hidden lg:[&>svg]:inline'
+					'flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex lg:[&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:size-4 [&_svg]:shrink-0 [&>svg]:hidden lg:[&>svg]:inline'
 				)}
 				aria-label='Select project'>
 				<SelectValue placeholder='Select an project'>
