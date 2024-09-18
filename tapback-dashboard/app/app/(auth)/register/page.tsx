@@ -23,7 +23,7 @@ import { register } from '@/lib/auth.actions';
 import { registerSchema, RegisterSchema } from '@/lib/schemas';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -31,6 +31,8 @@ export default function RegisterForm() {
 	const { toast } = useToast();
 
 	const [showPassword, setShowPassword] = useState(false);
+
+	const router = useRouter();
 
 	const registerForm = useForm<RegisterSchema>({
 		resolver: zodResolver(registerSchema),
@@ -46,7 +48,7 @@ export default function RegisterForm() {
 			toast({
 				title: response.message,
 			});
-			redirect('/app/projects');
+			router.replace('/app/projects');
 		} else {
 			toast({
 				title: response.error,

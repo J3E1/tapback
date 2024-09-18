@@ -1,13 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
-import {
-	Archive,
-	House,
-	Link as LinkIcon,
-	LucideIcon,
-	MessageCircleCode,
-	Paintbrush,
-} from 'lucide-react';
+import { IProject } from '@/typings/types';
+import { Archive, House, Link as LinkIcon, LucideIcon, MessageCircleCode, Paintbrush } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { Fragment } from 'react';
@@ -54,50 +48,15 @@ const links: SidebarLink[] = [
 	},
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ projects }: { projects: IProject[] }) {
 	const pathName = usePathname();
 	const { projectId } = useParams() as { projectId: string };
 
 	return (
-		<aside className='bg-background lg:w-1/6 group flex flex-col gap-4 py-2'>
+		<aside className='bg-background lg:w-1/6 group flex flex-col gap-4 py-2 border border-t-0'>
 			<nav className='grid gap-1 px-2 items-center'>
 				<div className='flex h-[52px] items-center justify-center'>
-					<ProjectSwitcher
-						projects={[
-							{
-								label: 'Alicia Koch',
-								email: 'alicia@example.com',
-								icon: (
-									<svg
-										role='img'
-										viewBox='0 0 24 24'
-										xmlns='http://www.w3.org/2000/svg'>
-										<title>Vercel</title>
-										<path
-											d='M24 22.525H0l12-21.05 12 21.05z'
-											fill='currentColor'
-										/>
-									</svg>
-								),
-							},
-							{
-								label: 'Alicia Koch',
-								email: 'alicia@gmail.com',
-								icon: (
-									<svg
-										role='img'
-										viewBox='0 0 24 24'
-										xmlns='http://www.w3.org/2000/svg'>
-										<title>Gmail</title>
-										<path
-											d='M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z'
-											fill='currentColor'
-										/>
-									</svg>
-								),
-							},
-						]}
-					/>
+					<ProjectSwitcher projects={projects} />
 				</div>
 				{links.map((link, index) => {
 					link.variant = link.href

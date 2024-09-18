@@ -6,7 +6,7 @@ export default function AppLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<div className='bg-lime-500 flex flex-grow'>
+		<div className='bg-background flex flex-grow'>
 			{children}
 			<Toaster />
 		</div>

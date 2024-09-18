@@ -1,3 +1,5 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CalendarDays, MessageSquare, ThumbsUp, Users } from 'lucide-react';
 export default function Logo({ className }: { className?: string }) {
 	return (
 		<svg

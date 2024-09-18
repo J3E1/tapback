@@ -6,12 +6,12 @@ import {
 } from '@/components/ui/popover';
 import { logout } from '@/lib/auth.actions';
 import { User } from 'lucia';
+import { UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Logo from './logo';
 import { ModeToggle } from './theme-toggle';
-import { Avatar, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 
 export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
@@ -28,7 +28,7 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 	if (pathname.includes('login') || pathname.includes('register')) return null;
 
 	return (
-		<header className='sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+		<header className='sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border'>
 			<div className='h-14 flex items-center px-3 lg:px-5'>
 				<div className='mr-auto'>
 					<Link
@@ -42,12 +42,12 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 				{!!user && (
 					<>
 						<Popover>
-							<PopoverTrigger>
-								<Avatar className='ml-2'>
-									<AvatarFallback>{user.name[0]}</AvatarFallback>
-								</Avatar>
+							<PopoverTrigger asChild>
+								<Button variant='ghost' size='icon'>
+									<UserRound className='size-5' />
+								</Button>
 							</PopoverTrigger>
-							<PopoverContent className='border-0'>
+							<PopoverContent>
 								<div className='flex flex-col items-center pb-4 gap-1'>
 									<p>{user.name}</p>
 									<p>{user.email}</p>

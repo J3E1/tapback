@@ -1,13 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -33,11 +27,8 @@ export default function CodeSnippetDisplay() {
 	return (
 		<Card className='w-full'>
 			<CardHeader>
-				<CardTitle className='text-2xl font-bold'>Code Snippet</CardTitle>
-				<CardDescription>
-					Copy below code to your widget and paste it in your project to start
-					collaborating feedback.
-				</CardDescription>
+				<CardTitle className='text-2xl'>Code Snippet</CardTitle>
+				<CardDescription>Copy below code to your widget and paste it in your project to start collaborating feedback.</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<div className='relative overflow-x-scroll no-scrollbar max-w-[45rem]'>
@@ -45,10 +36,12 @@ export default function CodeSnippetDisplay() {
 						language='html'
 						style={atomDark}
 						customStyle={{
-							padding: '1.5rem',
-							borderRadius: 'variable(--radius)',
-							fontSize: '0.875rem',
-							lineHeight: '1.5',
+							padding: 'clamp(0.75rem, 2vw, 1.5rem)', // Adjust padding to scale with viewport size
+							borderRadius: 'var(--radius)',
+							fontSize: 'clamp(0.75rem, 1.5vw, 0.89rem)', // Adjust font size responsively
+							wordWrap: 'break-word', // Force wrapping of long lines
+							whiteSpace: 'pre-wrap', // Preformatted text with wrapping
+							overflowX: 'hidden', // Prevent horizontal scrollbars
 						}}
 						wrapLines={true}>
 						{codeSnippet}

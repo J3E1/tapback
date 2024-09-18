@@ -13,12 +13,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { createProject, editProject } from '@/lib/mutaion.actions';
+import { createProject, deleteProject, editProject } from '@/lib/mutaion.actions';
 import { projectSchema, ProjectSchema } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
 import { IProject } from '@/typings/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import DeleteProjectDialog from './delete-project-dialog';
 
 export default function ProjectForm({
 	setOpen,
@@ -29,6 +32,11 @@ export default function ProjectForm({
 	edit?: boolean;
 	project?: IProject;
 }) {
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+
+	const router = useRouter()
+
 	const { toast } = useToast();
 	const form = useForm<ProjectSchema>({
 		resolver: zodResolver(projectSchema),
@@ -38,6 +46,24 @@ export default function ProjectForm({
 			description: edit && project?.description ? project.description : '',
 		},
 	});
+
+	const deleteHandler = async () => {
+		setIsDeleting(true);
+		const response = await deleteProject(project!.id, false);
+		if (response.success) {
+			toast({
+				title: response.message,
+			});
+			setDeleteDialogIsOpen(false);
+			router.push('/app/projects');
+		} else {
+			toast({
+				title: response.error,
+				variant: 'destructive',
+			});
+		}
+		setIsDeleting(false);
+	};
 
 	async function onSubmit(values: ProjectSchema) {
 		const response = await (edit && project
@@ -122,6 +148,20 @@ export default function ProjectForm({
 					className={cn(!edit && 'w-full')}>
 					Save
 				</Button>
+				{edit && (
+					<>
+						<Button onClick={() => setDeleteDialogIsOpen(true)} disabled={form.formState.isSubmitting} type='button' variant='destructive' className={'ml-4'}>
+							Delete Project
+						</Button>
+						<DeleteProjectDialog
+							isDeleting={isDeleting}
+							setOpen={setDeleteDialogIsOpen}
+							projectName={project?.name || ''}
+							handleDelete={deleteHandler}
+							open={deleteDialogIsOpen}
+						/>
+					</>
+				)}
 			</form>
 		</Form>
 	);

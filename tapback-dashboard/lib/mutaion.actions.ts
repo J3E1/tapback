@@ -69,7 +69,7 @@ export async function editProject(data: z.infer<typeof editProjectSchema>) {
 	}
 }
 
-export async function deleteProject(projectId: string) {
+export async function deleteProject(projectId: string, revalidate = true) {
 	const { user } = await validateRequest();
 	if (!user) return { success: false, error: 'Unauthorized' };
 
@@ -78,7 +78,7 @@ export async function deleteProject(projectId: string) {
 			where: { id: projectId, userId: user.id },
 		});
 
-		revalidatePath('/app/projects');
+		revalidate &&revalidatePath('/app/projects');
 		return { success: true, message: 'Project deleted' };
 	} catch (error) {
 		console.error('Error creating project:', error);
@@ -89,7 +89,7 @@ export async function deleteProject(projectId: string) {
 export async function addReview(data: z.infer<typeof reviewSchema>) {
 	const result = reviewSchema.safeParse(data);
 	if (!result.success) {
-		return { success: false, message: result.error.message };
+		return { success: false, error: result.error.message };
 	}
 
 	try {
@@ -100,7 +100,7 @@ export async function addReview(data: z.infer<typeof reviewSchema>) {
 		return { success: true, review };
 	} catch (error) {
 		console.error('Error adding review:', error);
-		return { success: false, message: 'Could not add review' };
+		return { success: false, error: 'Could not add review' };
 	}
 }
 
