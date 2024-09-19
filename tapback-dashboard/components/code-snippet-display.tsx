@@ -1,21 +1,26 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Button } from './ui/button';
 
-export default function CodeSnippetDisplay() {
+export default function CodeSnippetDisplay({ widgetId }: { widgetId: string }) {
 	const [isCopied, setIsCopied] = useState(false);
 
-	const srcToWidget = 'https://v0.dev/';
-	const projectId = 'your-api-key';
+	const srcToWidget = process.env.WIDGET_DOWNLOAD_LINK || 'https://v0.dev/';
 
 	const codeSnippet = `
-            <script src="${srcToWidget}" data-project-id="${projectId}"></script>
-        `.trim();
+					<script src="${srcToWidget}" data-widget-id="${widgetId}" defer></script>
+				`.trim();
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(codeSnippet).then(() => {
@@ -28,28 +33,31 @@ export default function CodeSnippetDisplay() {
 		<Card className='w-full'>
 			<CardHeader>
 				<CardTitle className='text-2xl'>Code Snippet</CardTitle>
-				<CardDescription>Copy below code to your widget and paste it in your project to start collaborating feedback.</CardDescription>
+				<CardDescription>
+					Copy below code for your widget and paste it in your webpage&apos;s
+					head to start collaborating feedback.
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className='relative overflow-x-scroll no-scrollbar max-w-[45rem]'>
+				<div className='relative w-full max-w-4xl py-4'>
 					<SyntaxHighlighter
 						language='html'
 						style={atomDark}
 						customStyle={{
-							padding: 'clamp(0.75rem, 2vw, 1.5rem)', // Adjust padding to scale with viewport size
-							borderRadius: 'var(--radius)',
-							fontSize: 'clamp(0.75rem, 1.5vw, 0.89rem)', // Adjust font size responsively
-							wordWrap: 'break-word', // Force wrapping of long lines
-							whiteSpace: 'pre-wrap', // Preformatted text with wrapping
-							overflowX: 'hidden', // Prevent horizontal scrollbars
+							padding: '1.5rem',
+							borderRadius: '0.5rem',
+							fontSize: '0.875rem',
+							lineHeight: '1.5',
+							overflow: 'auto',
 						}}
-						wrapLines={true}>
+						wrapLines={true}
+						wrapLongLines={true}>
 						{codeSnippet}
 					</SyntaxHighlighter>
 					<Button
 						variant='secondary'
 						size='sm'
-						className='absolute top-3 right-1'
+						className='absolute top-6 right-0 bg-secondary/60 backdrop-blur supports-[backdrop-filter]:bg-secondary/40'
 						onClick={copyToClipboard}>
 						{isCopied ? (
 							<>

@@ -77,7 +77,7 @@
 		-ms-overflow-style: none; /* IE and Edge */
 		scrollbar-width: none; /* Firefox */
 	}
-	code {
-		@apply block w-32;
-	}
+	/* code {
+		@apply block w-48;
+	} */
 }

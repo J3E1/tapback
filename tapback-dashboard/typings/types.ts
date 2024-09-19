@@ -1,5 +1,3 @@
-import { getAllReviewsByProjectId } from '@/lib/query.services';
-
 export interface IProject {
 	id: string;
 	name: string;
@@ -14,4 +12,15 @@ export interface IReview {
 	feedback: string | null;
 	rating: 'BAD' | 'DECENT' | 'LOVE_IT';
 	submittedAt: Date;
+}
+
+export interface IWidget {
+	id: string;
+	projectId: string;
+	backgroundColor: string;
+	primaryColor: string;
+	typographyColor: string;
+	radius: string;
+	createdAt: Date;
+	updatedAt: Date;
 }

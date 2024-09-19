@@ -1,5 +1,5 @@
-import { X, MessageSquare } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MessageSquare, X } from 'lucide-react';
 import { ButtonHTMLAttributes, useEffect, useState } from 'react';
 
 type Rating = 'Bad' | 'Decent' | 'Love it!';
@@ -135,7 +135,7 @@ export default function App() {
 							key={option}
 							type='button'
 							onClick={() => handleRatingChange(option)}
-							className={`w-full flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 box-border ${
+							className={`w-full flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 box-border text-typography ${
 								formState.rating === option
 									? 'border-primary'
 									: 'border-primary/10 hover:border-primary'
@@ -165,7 +165,7 @@ export default function App() {
 									value={formState.email}
 									onChange={handleEmailChange}
 									placeholder='Your email (required)'
-									className={`w-full  px-3 py-2 border bg-background placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none ${
+									className={`w-full  px-3 py-2 border bg-background placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography ${
 										!formState.isEmailValid
 											? 'border-destructive'
 											: 'border-primary/10'
@@ -183,7 +183,7 @@ export default function App() {
 								id='comment'
 								onChange={handleInputChange}
 								placeholder='Tell us more (optional)'
-								className='w-full border-primary/10 px-3 py-2 border bg-background placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none'
+								className='w-full border-primary/10 px-3 py-2 border bg-background placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography'
 								rows={3}
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}

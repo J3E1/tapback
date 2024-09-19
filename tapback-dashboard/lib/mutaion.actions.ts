@@ -2,6 +2,7 @@
 import { validateRequest } from './auth';
 import prismaClient from './prisma-client';
 
+import { IWidget } from '@/typings/types';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { projectSchema } from './schemas';
@@ -31,8 +32,13 @@ export async function createProject(data: z.infer<typeof projectSchema>) {
 		const { user } = await validateRequest();
 		if (!user) return { success: false, error: 'Unauthorized' };
 
-		await prismaClient.project.create({
+		const project = await prismaClient.project.create({
 			data: { ...result.data, userId: user.id },
+		});
+		await prismaClient.widget.create({
+			data: {
+				projectId: project.id,
+			},
 		});
 		revalidatePath('/app/projects');
 		return { success: true, message: 'Project created' };
@@ -78,7 +84,7 @@ export async function deleteProject(projectId: string, revalidate = true) {
 			where: { id: projectId, userId: user.id },
 		});
 
-		revalidate &&revalidatePath('/app/projects');
+		revalidate && revalidatePath('/app/projects');
 		return { success: true, message: 'Project deleted' };
 	} catch (error) {
 		console.error('Error creating project:', error);
@@ -107,18 +113,35 @@ export async function addReview(data: z.infer<typeof reviewSchema>) {
 export async function editWidget(data: z.infer<typeof widgetSchema>) {
 	const result = widgetSchema.safeParse(data);
 	if (!result.success) {
-		return { success: false, message: result.error.message };
+		return { success: false, error: result.error.message };
 	}
 
 	try {
-		const widget = await prismaClient.widget.update({
+		const foundWidget = await prismaClient.widget.findUnique({
 			where: { projectId: result.data.projectId },
-			data: result.data,
 		});
 
-		return { success: true, widget };
+		let widget: IWidget;
+		if (!foundWidget) {
+			widget = await prismaClient.widget.create({
+				data: {
+					backgroundColor: result.data.backgroundColor,
+					primaryColor: result.data.primaryColor,
+					typographyColor: result.data.typographyColor,
+					radius: result.data.radius,
+					projectId: result.data.projectId,
+				},
+			});
+		} else {
+			widget = await prismaClient.widget.update({
+				where: { projectId: result.data.projectId },
+				data: result.data,
+			});
+		}
+		revalidatePath(`app/projects/${widget.projectId}/customize`);
+		return { success: true, message: 'Widget saved' };
 	} catch (error) {
 		console.error('Error editing widget:', error);
-		return { success: false, message: 'Could not edit widget' };
+		return { success: false, error: 'Could not edit widget' };
 	}
 }

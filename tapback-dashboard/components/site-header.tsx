@@ -5,10 +5,11 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { logout } from '@/lib/auth.actions';
+import { cn } from '@/lib/utils';
 import { User } from 'lucia';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Logo from './logo';
 import { ModeToggle } from './theme-toggle';
@@ -16,6 +17,7 @@ import { Button } from './ui/button';
 
 export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 	const pathname = usePathname();
+	const params = useParams() as Record<string, string>;
 
 	const [loggingOut, setLoggingOut] = useState(false);
 
@@ -29,7 +31,11 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 
 	return (
 		<header className='sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border'>
-			<div className='h-14 flex items-center px-3 lg:px-5'>
+			<div
+				className={cn(
+					'h-14 flex items-center px-3 lg:px-5',
+					!params.projectId ? 'container mx-auto' : ''
+				)}>
 				<div className='mr-auto'>
 					<Link
 						href='/app/projects'
