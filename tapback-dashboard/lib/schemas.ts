@@ -39,3 +39,17 @@ export const projectSchema = z.object({
 });
 
 export type ProjectSchema = z.infer<typeof projectSchema>;
+
+export const widgetSchema = z.object({
+	projectId: z.string().uuid(),
+	backgroundColor: z.string().min(1),
+	primaryColor: z.string().min(1),
+	typographyColor: z.string().min(1),
+	radius: z.string().min(1),
+});
+
+export const submitReviewSchema = z.object({
+	email: z.string().email(),
+	feedback: z.string().min(10),
+	rating: z.enum(['BAD', 'DECENT', 'LOVE_IT']),
+});

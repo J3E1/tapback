@@ -5,22 +5,7 @@ import prismaClient from './prisma-client';
 import { IWidget } from '@/typings/types';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { projectSchema } from './schemas';
-
-const reviewSchema = z.object({
-	projectId: z.string().uuid(),
-	email: z.string().email(),
-	feedback: z.string().min(1),
-	rating: z.enum(['BAD', 'DECENT', 'LOVE_IT']),
-});
-
-const widgetSchema = z.object({
-	projectId: z.string().uuid(),
-	backgroundColor: z.string().min(1),
-	primaryColor: z.string().min(1),
-	typographyColor: z.string().min(1),
-	radius: z.string().min(1),
-});
+import { projectSchema, widgetSchema } from './schemas';
 
 export async function createProject(data: z.infer<typeof projectSchema>) {
 	const result = projectSchema.safeParse(data);
@@ -89,24 +74,6 @@ export async function deleteProject(projectId: string, revalidate = true) {
 	} catch (error) {
 		console.error('Error creating project:', error);
 		return { success: false, error: 'Could not create project' };
-	}
-}
-
-export async function addReview(data: z.infer<typeof reviewSchema>) {
-	const result = reviewSchema.safeParse(data);
-	if (!result.success) {
-		return { success: false, error: result.error.message };
-	}
-
-	try {
-		const review = await prismaClient.review.create({
-			data: result.data,
-		});
-
-		return { success: true, review };
-	} catch (error) {
-		console.error('Error adding review:', error);
-		return { success: false, error: 'Could not add review' };
 	}
 }
 

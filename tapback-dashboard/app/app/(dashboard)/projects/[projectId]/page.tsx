@@ -17,10 +17,6 @@ export default async function ProjectDashboardPage({
 
 	return (
 		<div className='container bg-background'>
-			<h3 className='text-3xl font-semibold leading-none tracking-tight mb-6'>
-				Feedback Dashboard
-			</h3>
-
 			<StatsSection reviews={reviews.reviews} />
 
 			<ChartsSection reviews={reviews.reviews} />

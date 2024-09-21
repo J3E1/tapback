@@ -1,9 +1,5 @@
 'use client';
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { logout } from '@/lib/auth.actions';
 import { cn } from '@/lib/utils';
 import { User } from 'lucia';
@@ -37,9 +33,7 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 					!params.projectId ? 'container mx-auto' : ''
 				)}>
 				<div className='mr-auto'>
-					<Link
-						href='/app/projects'
-						className='mr-4 flex items-center space-x-2 lg:mr-6'>
+					<Link href='/app/projects' className='mr-4 flex items-center space-x-2 lg:mr-6'>
 						<Logo className='size-8' />
 						<span className='font-bold hidden lg:inline'>TapBack</span>
 					</Link>
@@ -69,9 +63,6 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 						</Popover>
 					</>
 				)}
-
-				{/* <MainNav />
-				<MobileNav /> */}
 			</div>
 		</header>
 	);
