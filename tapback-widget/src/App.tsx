@@ -78,9 +78,7 @@ export default function App() {
 		}));
 	};
 
-	const handleInputChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-	) => {
+	const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormState(prevState => ({
 			...prevState,
@@ -123,7 +121,7 @@ export default function App() {
 				<motion.button
 					onClick={() => setFormIsOpen(prev => !prev)}
 					className='text-typography/30 hover:text-typography/60'
-					whileHover={{ scale: 1.1 }}
+					whileHover={{ scale: 1.065 }}
 					whileTap={{ scale: 0.9 }}>
 					<X size={20} />
 				</motion.button>
@@ -142,8 +140,8 @@ export default function App() {
 							}`}
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}>
+							whileHover={{ scale: 1.065 }}
+							whileTap={{ scale: 1 }}>
 							<span>{emojis[option]}</span>
 							<span>{option}</span>
 						</motion.button>
@@ -157,18 +155,14 @@ export default function App() {
 							animate={{ opacity: 1, height: 'auto' }}
 							exit={{ opacity: 0, height: 0 }}>
 							<motion.div
-								animate={
-									formState.isEmailValid ? {} : { x: [-10, 10, -10, 10, 0] }
-								}
+								animate={formState.isEmailValid ? {} : { x: [-10, 10, -10, 10, 0] }}
 								transition={{ duration: 0.4 }}>
 								<input
 									value={formState.email}
 									onChange={handleEmailChange}
 									placeholder='Your email (required)'
 									className={`w-full  px-3 py-2 border bg-background placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography ${
-										!formState.isEmailValid
-											? 'border-destructive'
-											: 'border-primary/10'
+										!formState.isEmailValid ? 'border-destructive' : 'border-primary/10'
 									}`}
 								/>
 								{!formState.isEmailValid && (
@@ -246,8 +240,7 @@ export default function App() {
 				initial={{ y: 20, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
 				transition={{ delay: 0.3 }}>
-				Your feedback helps us improve, appreciate the time you took to send us
-				the feedback!
+				Your feedback helps us improve, appreciate the time you took to send us the feedback!
 			</motion.p>
 			<MotionButton onClick={handleDone}>Done</MotionButton>
 		</motion.div>
@@ -304,11 +297,7 @@ export default function App() {
 							exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
 							className='fixed bottom-20 right-5 bg-background/50 rounded-lg shadow-lg p-6 w-[28rem] mx-auto backdrop-blur-2xl supports-[backdrop-filter]:bg-background/55'>
 							<AnimatePresence mode='wait'>
-								{!isLoading
-									? isSubmitted
-										? submittedLayout
-										: preSubmitLayout
-									: loadingLayout}
+								{!isLoading ? (isSubmitted ? submittedLayout : preSubmitLayout) : loadingLayout}
 							</AnimatePresence>
 						</motion.div>
 					</motion.div>

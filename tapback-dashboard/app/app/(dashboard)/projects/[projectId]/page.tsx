@@ -1,6 +1,11 @@
 import ChartsSection from '@/components/charts-section';
 import StatsSection from '@/components/stats-section';
 import { getAllReviewsByProjectId } from '@/lib/query.services';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Feedback Insights',
+};
 
 export default async function ProjectDashboardPage({
 	params,

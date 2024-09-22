@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import {
 	Form,
 	FormControl,
@@ -13,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { cardVariants, containerVariants } from '@/lib/constants';
 import { createProject, deleteProject, editProject } from '@/lib/mutaion.actions';
 import { projectSchema, ProjectSchema } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,9 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import DeleteProjectDialog from './delete-project-dialog';
+import { MotionButton, MotionDiv } from './motion';
+import { CardDescription, CardHeader, CardTitle } from './ui/card';
+import { DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
 export default function ProjectForm({
 	setOpen,
@@ -35,7 +38,7 @@ export default function ProjectForm({
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
-	const router = useRouter()
+	const router = useRouter();
 
 	const { toast } = useToast();
 	const form = useForm<ProjectSchema>({
@@ -79,90 +82,126 @@ export default function ProjectForm({
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-				<FormField
-					control={form.control}
-					name='name'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Project Name</FormLabel>
-							<FormControl>
-								<Input
-									disabled={form.formState.isSubmitting}
-									placeholder='My Awesome Project'
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>
-								This is the name of your project.
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='siteUrl'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Site URL</FormLabel>
-							<FormControl>
-								<Input
-									disabled={form.formState.isSubmitting}
-									placeholder='https://myproject.com'
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>
-								The URL where your project is hosted.
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='description'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Description (Optional)</FormLabel>
-							<FormControl>
-								<Textarea
-									disabled={form.formState.isSubmitting}
-									placeholder='A brief description of your project'
-									className='resize-none'
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>
-								You can provide a short description of your project here.
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button
-					disabled={form.formState.isSubmitting}
-					type='submit'
-					className={cn(!edit && 'w-full')}>
-					Save
-				</Button>
-				{edit && (
-					<>
-						<Button onClick={() => setDeleteDialogIsOpen(true)} disabled={form.formState.isSubmitting} type='button' variant='destructive' className={'ml-4'}>
-							Delete Project
-						</Button>
-						<DeleteProjectDialog
-							isDeleting={isDeleting}
-							setOpen={setDeleteDialogIsOpen}
-							projectName={project?.name || ''}
-							handleDelete={deleteHandler}
-							open={deleteDialogIsOpen}
-						/>
-					</>
+		<MotionDiv
+			variants={containerVariants}
+			initial='hidden'
+			animate='visible'
+			className='space-y-4'>
+			<MotionDiv variants={cardVariants}>
+				{edit ? (
+					<CardHeader className='p-0'>
+						<CardTitle>Edit Project</CardTitle>
+						<CardDescription>
+							Edit the details of your project here. Click save when you&apos;re done.
+						</CardDescription>
+					</CardHeader>
+				) : (
+					<DialogHeader>
+						<DialogTitle>Add New Project</DialogTitle>
+						<DialogDescription>
+							Enter the details of your new project here. Click save when you&apos;re done.
+						</DialogDescription>
+					</DialogHeader>
 				)}
-			</form>
-		</Form>
+			</MotionDiv>
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+					<MotionDiv variants={cardVariants}>
+						<FormField
+							control={form.control}
+							name='name'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Project Name</FormLabel>
+									<FormControl>
+										<Input
+											disabled={form.formState.isSubmitting}
+											placeholder='My Awesome Project'
+											{...field}
+										/>
+									</FormControl>
+									<FormDescription>This is the name of your project.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</MotionDiv>
+					<MotionDiv variants={cardVariants}>
+						<FormField
+							control={form.control}
+							name='siteUrl'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Site URL</FormLabel>
+									<FormControl>
+										<Input
+											disabled={form.formState.isSubmitting}
+											placeholder='https://myproject.com'
+											{...field}
+										/>
+									</FormControl>
+									<FormDescription>The URL where your project is hosted.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</MotionDiv>
+					<MotionDiv variants={cardVariants}>
+						<FormField
+							control={form.control}
+							name='description'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Description (Optional)</FormLabel>
+									<FormControl>
+										<Textarea
+											disabled={form.formState.isSubmitting}
+											placeholder='A brief description of your project'
+											className='resize-none'
+											{...field}
+										/>
+									</FormControl>
+									<FormDescription>
+										You can provide a short description of your project here.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</MotionDiv>
+					<MotionButton
+						whileHover={{ scale: 1.065 }}
+						whileTap={{ scale: 1 }}
+						variants={cardVariants}
+						disabled={form.formState.isSubmitting}
+						type='submit'
+						className={cn(!edit && 'w-full')}>
+						Save
+					</MotionButton>
+					{edit && (
+						<>
+							<MotionButton
+								whileHover={{ scale: 1.065 }}
+								whileTap={{ scale: 1 }}
+								variants={cardVariants}
+								onClick={() => setDeleteDialogIsOpen(true)}
+								disabled={form.formState.isSubmitting}
+								type='button'
+								variant='destructive'
+								className={'ml-4'}>
+								Delete Project
+							</MotionButton>
+							<DeleteProjectDialog
+								isDeleting={isDeleting}
+								setOpen={setDeleteDialogIsOpen}
+								projectName={project?.name || ''}
+								handleDelete={deleteHandler}
+								open={deleteDialogIsOpen}
+							/>
+						</>
+					)}
+				</form>
+			</Form>
+		</MotionDiv>
 	);
 }

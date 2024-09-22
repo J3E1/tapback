@@ -1,13 +1,11 @@
 import Sidebar from '@/components/sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { getAllProjects, getAllReviewsByProjectId } from '@/lib/query.services';
+import { getAllProjects } from '@/lib/query.services';
 
 export default async function ProjectLayout({
 	children,
-	params,
 }: Readonly<{
 	children: React.ReactNode;
-	params: { projectId: string };
 }>) {
 	const response = await getAllProjects();
 
@@ -25,12 +23,17 @@ export default async function ProjectLayout({
 		<div className='flex-grow flex'>
 			<TooltipProvider delayDuration={0}>
 				<Sidebar
-					projects={projects?.map(project => ({ id: project.id, name: project.name, siteUrl: project.siteUrl, description: project.description })) || []}
+					projects={
+						projects?.map(project => ({
+							id: project.id,
+							name: project.name,
+							siteUrl: project.siteUrl,
+							description: project.description,
+						})) || []
+					}
 				/>
 			</TooltipProvider>
-			<main className='w-full flex flex-col sm:gap-4 p-4 md:p-6'>
-				{children}
-			</main>
+			<main className='w-full flex flex-col sm:gap-4 p-4 md:p-6'>{children}</main>
 		</div>
 	);
 }

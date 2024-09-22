@@ -22,7 +22,9 @@ export const columns: ColumnDef<IReview>[] = [
 		accessorKey: 'rating',
 		header: ({ column }) => {
 			return (
-				<Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+				<Button
+					variant='ghost'
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
 					Rating
 					<ArrowUpDown className='ml-2 h-4 w-4' />
 				</Button>
@@ -40,7 +42,9 @@ export const columns: ColumnDef<IReview>[] = [
 		accessorKey: 'email',
 		header: ({ column }) => {
 			return (
-				<Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+				<Button
+					variant='ghost'
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
 					Email
 					<ArrowUpDown className='ml-2 h-4 w-4' />
 				</Button>
@@ -55,14 +59,20 @@ export const columns: ColumnDef<IReview>[] = [
 		accessorKey: 'submittedAt',
 		header: ({ column }) => {
 			return (
-				<Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+				<Button
+					variant='ghost'
+					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
 					Submitted At
 					<ArrowUpDown className='ml-2 h-4 w-4' />
 				</Button>
 			);
 		},
 		cell: ({ row }) => {
-			const formatted = new Date(row.original.submittedAt).toLocaleString();
+			const formatted = new Intl.DateTimeFormat('en-US', {
+				day: '2-digit',
+				month: '2-digit',
+				year: 'numeric',
+			}).format(new Date(row.original.submittedAt));
 
 			return <div className='font-medium'>{formatted}</div>;
 		},

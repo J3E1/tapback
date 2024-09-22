@@ -16,15 +16,11 @@ import { toHex, toHsla } from 'color2k';
 import { useCallback, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import { Button } from './ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from './ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import Widget from './widget';
+import { MotionButton, MotionDiv } from './motion';
+import { cardVariants, containerVariants } from '@/lib/constants';
 
 type ColorState = {
 	hex: string;
@@ -42,11 +38,7 @@ function isValidHex(color: string): boolean {
 }
 
 const setColorData = (color: string | undefined, dark = false): ColorState => ({
-	hex: color
-		? toHex(`hsl(${color.split(' ').join(', ')})`)
-		: dark
-		? '#1A1A1A'
-		: '#FFFFFF',
+	hex: color ? toHex(`hsl(${color.split(' ').join(', ')})`) : dark ? '#1A1A1A' : '#FFFFFF',
 	hsl: color ? color : dark ? hexToHsl('#1A1A1A') : hexToHsl('#FFFFFF'),
 });
 
@@ -58,15 +50,9 @@ export default function ColorPicker({
 	projectId: string;
 }) {
 	const [isLoading, setIsLoading] = useState(false);
-	const [background, setBackground] = useState<ColorState>(
-		setColorData(widget?.backgroundColor)
-	);
-	const [primary, setPrimary] = useState<ColorState>(
-		setColorData(widget?.primaryColor)
-	);
-	const [typography, setTypography] = useState<ColorState>(
-		setColorData(widget?.typographyColor)
-	);
+	const [background, setBackground] = useState<ColorState>(setColorData(widget?.backgroundColor));
+	const [primary, setPrimary] = useState<ColorState>(setColorData(widget?.primaryColor));
+	const [typography, setTypography] = useState<ColorState>(setColorData(widget?.typographyColor));
 	const [radius, setRadius] = useState(widget?.radius || '0.5rem');
 
 	const containerStyle = {
@@ -123,66 +109,76 @@ export default function ColorPicker({
 	};
 
 	return (
-		<Card className='w-full'>
-			<CardHeader>
-				<CardTitle className='text-2xl'>Customize Your Widget</CardTitle>
-				<CardDescription>
-					Change the colors of your widget here and get the realtime change in
-					your widget. All colors are in HEX format.
-				</CardDescription>
-			</CardHeader>
-
-			<CardContent className='flex flex-col md:flex-row gap-8'>
-				<div className='space-y-4'>
-					<div className='space-y-1'>
-						<Label htmlFor='background-color'>Background Color</Label>
-						<ColorPickerPopover
-							color={background.hex}
-							onChange={handleColorChange(setBackground)}
-							id='background-color'
-						/>
-					</div>
-					<div className='space-y-1'>
-						<Label htmlFor='primary-color'>Primary Color</Label>
-						<ColorPickerPopover
-							color={primary.hex}
-							onChange={handleColorChange(setPrimary)}
-							id='primary-color'
-						/>
-					</div>
-					<div className='space-y-1'>
-						<Label htmlFor='typography-color'>Typography Color</Label>
-						<ColorPickerPopover
-							color={typography.hex}
-							onChange={handleColorChange(setTypography)}
-							id='typography-color'
-						/>
-					</div>
-					<div className='space-y-1'>
-						<Label htmlFor='radius'>Border Radius</Label>
-						<Select onValueChange={setRadius} defaultValue={radius}>
-							<SelectTrigger id='radius' className='w-full'>
-								<SelectValue placeholder='Select radius' />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value='0'>None</SelectItem>
-								<SelectItem value='0.25rem'>Small</SelectItem>
-								<SelectItem value='0.5rem'>Medium</SelectItem>
-								<SelectItem value='1rem'>Large</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-					<Button disabled={isLoading} onClick={handleSaveWidget}>
-						Save
-					</Button>
-				</div>
-				<div
-					className='w-full p-4 flex items-center justify-center'
-					style={containerStyle}>
-					<Widget />
-				</div>
-			</CardContent>
-		</Card>
+		<>
+			<Card className='w-full'>
+				<MotionDiv variants={cardVariants} initial='hidden' animate='visible'>
+					<CardHeader>
+						<CardTitle className='text-2xl'>Customize Your Widget</CardTitle>
+						<CardDescription>
+							Change the colors of your widget here and get the realtime change in your widget. All
+							colors are in HEX format.
+						</CardDescription>
+					</CardHeader>
+				</MotionDiv>
+				<CardContent className='flex flex-col md:flex-row gap-8'>
+					<MotionDiv
+						variants={containerVariants}
+						initial='hidden'
+						animate='visible'
+						className='space-y-4'>
+						<MotionDiv variants={cardVariants} className='space-y-1'>
+							<Label htmlFor='background-color'>Background Color</Label>
+							<ColorPickerPopover
+								color={background.hex}
+								onChange={handleColorChange(setBackground)}
+								id='background-color'
+							/>
+						</MotionDiv>
+						<MotionDiv variants={cardVariants} className='space-y-1'>
+							<Label htmlFor='primary-color'>Primary Color</Label>
+							<ColorPickerPopover
+								color={primary.hex}
+								onChange={handleColorChange(setPrimary)}
+								id='primary-color'
+							/>
+						</MotionDiv>
+						<MotionDiv variants={cardVariants} className='space-y-1'>
+							<Label htmlFor='typography-color'>Typography Color</Label>
+							<ColorPickerPopover
+								color={typography.hex}
+								onChange={handleColorChange(setTypography)}
+								id='typography-color'
+							/>
+						</MotionDiv>
+						<MotionDiv variants={cardVariants} className='space-y-1'>
+							<Label htmlFor='radius'>Border Radius</Label>
+							<Select onValueChange={setRadius} defaultValue={radius}>
+								<SelectTrigger id='radius' className='w-full'>
+									<SelectValue placeholder='Select radius' />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value='0'>None</SelectItem>
+									<SelectItem value='0.25rem'>Small</SelectItem>
+									<SelectItem value='0.5rem'>Medium</SelectItem>
+									<SelectItem value='1rem'>Large</SelectItem>
+								</SelectContent>
+							</Select>
+						</MotionDiv>
+						<MotionButton variants={cardVariants} disabled={isLoading} onClick={handleSaveWidget}>
+							Save
+						</MotionButton>
+					</MotionDiv>
+					<MotionDiv
+						variants={cardVariants}
+						initial='hidden'
+						animate='visible'
+						className='w-full p-4 flex items-center justify-center'
+						style={containerStyle}>
+						<Widget />
+					</MotionDiv>
+				</CardContent>
+			</Card>
+		</>
 	);
 }
 
@@ -213,10 +209,7 @@ function ColorPickerPopover({
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button
-					id={id}
-					variant='outline'
-					className='w-full justify-start text-left font-normal'>
+				<Button id={id} variant='outline' className='w-full justify-start text-left font-normal'>
 					<div
 						className='w-4 h-4 rounded-full mr-2 border border-border'
 						style={{ backgroundColor: color }}
@@ -227,11 +220,7 @@ function ColorPickerPopover({
 			<PopoverContent className='w-auto p-4'>
 				<div className='flex flex-col gap-2'>
 					<HexColorPicker color={color} onChange={handlePickerChange} />
-					<Input
-						value={inputColor}
-						onChange={handleInputChange}
-						placeholder='Enter hex color'
-					/>
+					<Input value={inputColor} onChange={handleInputChange} placeholder='Enter hex color' />
 				</div>
 			</PopoverContent>
 		</Popover>

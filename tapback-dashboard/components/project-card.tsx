@@ -1,12 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { deleteProject } from '@/lib/mutaion.actions';
 import { IProject } from '@/typings/types';
@@ -59,9 +53,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 						<CardTitle>{project.name}</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<CardDescription className='truncate'>
-							{project.description}
-						</CardDescription>
+						<CardDescription className='truncate'>{project.description}</CardDescription>
 						<div className='absolute top-2 right-2 space-x-'>
 							<Button onClick={handleGoToSite} variant='link' size='sm'>
 								<Link2Icon className='size-4' />
@@ -91,20 +83,16 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 	);
 }
 
-export function AddProjectCard({
-	isProjectLimitReached,
-}: {
-	isProjectLimitReached: boolean;
-}) {
+export function AddProjectCard({ isProjectLimitReached }: { isProjectLimitReached: boolean }) {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<>
 			<Card
 				onClick={() => setOpen(true)}
-				className='relative cursor-pointer hover:bg-accent hover:text-accent-foreground hover:shadow-lg transition-all duration-300 ease-in-out h-28 flex items-center justify-center'>
+				className='relative cursor-pointer hover:bg-accent hover:text-accent-foreground hover:shadow-lg transition-all duration-300 ease-in-out h-28 flex items-center justify-center group'>
 				<Button variant='link' size='icon'>
-					<PlusIcon className='size-8' />
+					<PlusIcon className='size-8 group-hover:text-accent-foreground' />
 					<span className='sr-only'>Add project</span>
 				</Button>
 			</Card>

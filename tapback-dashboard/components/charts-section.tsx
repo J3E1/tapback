@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardDescription, CardTitle } from './ui/card';
 import {
 	ChartConfig,
 	ChartContainer,
@@ -11,6 +11,7 @@ import {
 	ChartTooltipContent,
 } from './ui/chart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { MotionDiv } from './motion';
 
 const chartConfig = {
 	reviews: {
@@ -81,118 +82,122 @@ export default function ChartsSection({ reviews }: Props) {
 		const newChartData = processReviewData(reviews, curTimeRange);
 		setChartData(newChartData);
 	};
+	const containerVariants = {
+		hidden: { opacity: 0, y: 20 },
+		visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+	};
 
 	if (!reviews) return null;
 
 	return (
 		<Card>
-			<CardHeader className='flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row'>
-				<div className='grid flex-1 gap-1 text-center sm:text-left'>
+			<MotionDiv
+				initial='hidden'
+				animate='visible'
+				variants={containerVariants}
+				className='flex items-center gap-2 space-y-1.5 p-6 border-b sm:flex-row'>
+				<div className='grid flex-1 gap-1 text-left'>
 					<CardTitle>Review Ratings Chart</CardTitle>
 					<CardDescription>
 						Showing review ratings for the{' '}
 						{timeRange === 'all' ? `all time` : `last ${timeRange} days`}
 					</CardDescription>
 				</div>
-				<Select value={timeRange} onValueChange={onTimeRangeChange}>
-					<SelectTrigger
-						className='w-[160px] rounded-lg sm:ml-auto'
-						aria-label='Select a time range'>
-						<SelectValue placeholder='Last 90 days' />
-					</SelectTrigger>
-					<SelectContent className='rounded-xl'>
-						<SelectItem value='all' className='rounded-lg'>
-							All time
-						</SelectItem>
-						<SelectItem value='90' className='rounded-lg'>
-							Last 90 days
-						</SelectItem>
-						<SelectItem value='30' className='rounded-lg'>
-							Last 30 days
-						</SelectItem>
-						<SelectItem value='7' className='rounded-lg'>
-							Last 7 days
-						</SelectItem>
-					</SelectContent>
-				</Select>
-			</CardHeader>
+				<MotionDiv initial='hidden' animate='visible' variants={containerVariants}>
+					<Select value={timeRange} onValueChange={onTimeRangeChange}>
+						<SelectTrigger className='w-[160px]  sm:ml-auto' aria-label='Select a time range'>
+							<SelectValue placeholder='Last 90 days' />
+						</SelectTrigger>
+
+						<SelectContent>
+							<SelectItem value='all'>All time</SelectItem>
+							<SelectItem value='90'>Last 90 days</SelectItem>
+							<SelectItem value='30'>Last 30 days</SelectItem>
+							<SelectItem value='7'>Last 7 days</SelectItem>
+						</SelectContent>
+					</Select>
+				</MotionDiv>
+			</MotionDiv>
+
 			<CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
-				<ChartContainer config={chartConfig} className='aspect-auto h-[250px] w-full'>
-					<AreaChart data={chartData}>
-						<defs>
-							<linearGradient id='fillBAD' x1='0' y1='0' x2='0' y2='1'>
-								<stop offset='5%' stopColor='var(--color-BAD)' stopOpacity={0.8} />
-								<stop offset='95%' stopColor='var(--color-BAD)' stopOpacity={0.1} />
-							</linearGradient>
-							<linearGradient id='fillDECENT' x1='0' y1='0' x2='0' y2='1'>
-								<stop offset='5%' stopColor='var(--color-DECENT)' stopOpacity={0.8} />
-								<stop offset='95%' stopColor='var(--color-DECENT)' stopOpacity={0.1} />
-							</linearGradient>
-							<linearGradient id='fillLOVE_IT' x1='0' y1='0' x2='0' y2='1'>
-								<stop offset='5%' stopColor='var(--color-LOVE_IT)' stopOpacity={0.8} />
-								<stop offset='95%' stopColor='var(--color-LOVE_IT)' stopOpacity={0.1} />
-							</linearGradient>
-						</defs>
-						<CartesianGrid vertical={false} />
-						<XAxis
-							dataKey='date'
-							tickLine={false}
-							axisLine={false}
-							tickMargin={8}
-							minTickGap={32}
-							tickFormatter={value => {
-								const date = new Date(value);
-								return date.toLocaleDateString('en-US', {
-									month: 'short',
-									day: 'numeric',
-								});
-							}}
-						/>
-						<YAxis
-							tickLine={false}
-							axisLine={false}
-							tickMargin={8}
-							tickFormatter={value => `${value}`}
-						/>
-						<ChartTooltip
-							cursor={false}
-							content={
-								<ChartTooltipContent
-									className='bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
-									labelFormatter={value => {
-										return new Date(value).toLocaleDateString('en-US', {
-											month: 'short',
-											day: 'numeric',
-										});
-									}}
-									indicator='dot'
-								/>
-							}
-						/>
-						<Area
-							type='monotone'
-							dataKey='BAD'
-							stackId='1'
-							stroke='var(--color-BAD)'
-							fill='url(#fillBAD)'
-						/>
-						<Area
-							type='monotone'
-							dataKey='DECENT'
-							stackId='1'
-							stroke='var(--color-DECENT)'
-							fill='url(#fillDECENT)'
-						/>
-						<Area
-							type='monotone'
-							dataKey='LOVE_IT'
-							stackId='1'
-							stroke='var(--color-LOVE_IT)'
-							fill='url(#fillLOVE_IT)'
-						/>
-						<ChartLegend content={<ChartLegendContent />} />
-					</AreaChart>
-				</ChartContainer>
+				<MotionDiv initial='hidden' animate='visible' variants={containerVariants}>
+					<ChartContainer config={chartConfig} className='aspect-auto h-[250px] w-full'>
+						<AreaChart data={chartData}>
+							<defs>
+								<linearGradient id='fillBAD' x1='0' y1='0' x2='0' y2='1'>
+									<stop offset='5%' stopColor='var(--color-BAD)' stopOpacity={0.8} />
+									<stop offset='95%' stopColor='var(--color-BAD)' stopOpacity={0.1} />
+								</linearGradient>
+								<linearGradient id='fillDECENT' x1='0' y1='0' x2='0' y2='1'>
+									<stop offset='5%' stopColor='var(--color-DECENT)' stopOpacity={0.8} />
+									<stop offset='95%' stopColor='var(--color-DECENT)' stopOpacity={0.1} />
+								</linearGradient>
+								<linearGradient id='fillLOVE_IT' x1='0' y1='0' x2='0' y2='1'>
+									<stop offset='5%' stopColor='var(--color-LOVE_IT)' stopOpacity={0.8} />
+									<stop offset='95%' stopColor='var(--color-LOVE_IT)' stopOpacity={0.1} />
+								</linearGradient>
+							</defs>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey='date'
+								tickLine={false}
+								axisLine={false}
+								tickMargin={8}
+								minTickGap={32}
+								tickFormatter={value => {
+									const date = new Date(value);
+									return date.toLocaleDateString('en-US', {
+										month: 'short',
+										day: 'numeric',
+									});
+								}}
+							/>
+							<YAxis
+								tickLine={false}
+								axisLine={false}
+								tickMargin={8}
+								tickFormatter={value => `${value}`}
+							/>
+							<ChartTooltip
+								cursor={false}
+								content={
+									<ChartTooltipContent
+										className='bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
+										labelFormatter={value => {
+											return new Date(value).toLocaleDateString('en-US', {
+												month: 'short',
+												day: 'numeric',
+											});
+										}}
+										indicator='dot'
+									/>
+								}
+							/>
+							<Area
+								type='monotone'
+								dataKey='BAD'
+								stackId='1'
+								stroke='var(--color-BAD)'
+								fill='url(#fillBAD)'
+							/>
+							<Area
+								type='monotone'
+								dataKey='DECENT'
+								stackId='1'
+								stroke='var(--color-DECENT)'
+								fill='url(#fillDECENT)'
+							/>
+							<Area
+								type='monotone'
+								dataKey='LOVE_IT'
+								stackId='1'
+								stroke='var(--color-LOVE_IT)'
+								fill='url(#fillLOVE_IT)'
+							/>
+							<ChartLegend content={<ChartLegendContent />} />
+						</AreaChart>
+					</ChartContainer>
+				</MotionDiv>
 			</CardContent>
 		</Card>
 	);

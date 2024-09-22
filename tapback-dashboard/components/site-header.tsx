@@ -1,6 +1,7 @@
 'use client';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { logout } from '@/lib/auth.actions';
+import { cardVariants } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { User } from 'lucia';
 import { UserRound } from 'lucide-react';
@@ -8,6 +9,7 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Logo from './logo';
+import { MotionButton, MotionHeader } from './motion';
 import { ModeToggle } from './theme-toggle';
 import { Button } from './ui/button';
 
@@ -23,10 +25,19 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 		setLoggingOut(false);
 	}
 
-	if (pathname.includes('login') || pathname.includes('register')) return null;
+	const headerVariants = {
+		hidden: { y: -100, opacity: 0 },
+		visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+	};
+
+	if (pathname.includes('login') || pathname.includes('register') || pathname === '/') return null;
 
 	return (
-		<header className='sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border'>
+		<MotionHeader
+			variants={headerVariants}
+			initial='hidden'
+			animate='visible'
+			className='sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border'>
 			<div
 				className={cn(
 					'h-14 flex items-center px-3 lg:px-5',
@@ -52,18 +63,24 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 									<p>{user.name}</p>
 									<p>{user.email}</p>
 								</div>
-								<Button
+
+								<MotionButton
+									whileHover={{ scale: 1.065 }}
+									whileTap={{ scale: 1 }}
+									variants={cardVariants}
+									initial='hidden'
+									animate='visible'
 									variant='destructive'
 									disabled={loggingOut}
 									onClick={logoutHandler}
 									className='w-full'>
 									Logout
-								</Button>
+								</MotionButton>
 							</PopoverContent>
 						</Popover>
 					</>
 				)}
 			</div>
-		</header>
+		</MotionHeader>
 	);
 }

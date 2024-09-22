@@ -1,10 +1,18 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { IProject } from '@/typings/types';
-import { Archive, House, Link as LinkIcon, LucideIcon, MessageCircleCode, Paintbrush } from 'lucide-react';
-import Link from 'next/link';
+import { AnimatePresence } from 'framer-motion';
+import {
+	Archive,
+	House,
+	Link as LinkIcon,
+	LucideIcon,
+	MessageCircleCode,
+	Paintbrush,
+} from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { Fragment } from 'react';
+import { MotionAside, MotionLink, MotionNav } from './motion';
 import { ProjectSwitcher } from './project-switcher';
 import { buttonVariants } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
@@ -53,8 +61,24 @@ export default function Sidebar({ projects }: { projects: IProject[] }) {
 	const { projectId } = useParams() as { projectId: string };
 
 	return (
-		<aside className='bg-background lg:w-1/6 group flex flex-col gap-4 py-2 border border-t-0'>
-			<nav className='grid gap-1 px-2 items-center'>
+		<MotionAside
+			initial={{ x: -50, opacity: 0 }}
+			animate={{ x: 0, opacity: 1 }}
+			transition={{ duration: 0.3 }}
+			className='bg-background lg:w-1/6 group flex flex-col gap-4 py-2 border border-t-0'>
+			<MotionNav
+				className='grid gap-1 px-2 items-center'
+				initial='hidden'
+				animate='visible'
+				variants={{
+					hidden: { opacity: 0 },
+					visible: {
+						opacity: 1,
+						transition: {
+							staggerChildren: 0.1,
+						},
+					},
+				}}>
 				<div className='flex h-[52px] items-center justify-center'>
 					<ProjectSwitcher projects={projects} />
 				</div>
@@ -70,36 +94,46 @@ export default function Sidebar({ projects }: { projects: IProject[] }) {
 						<Fragment key={index}>
 							<Tooltip delayDuration={0}>
 								<TooltipTrigger asChild>
-									<Link
-										href={`/app/projects/${projectId}/${link.href}`}
+									<MotionLink
 										className={cn(
 											buttonVariants({ variant: link.variant, size: 'icon' }),
 											'size-9 lg:hidden mx-auto'
-										)}>
+										)}
+										whileHover={{ scale: 1.065 }}
+										whileTap={{ scale: 1 }}
+										href={`/app/projects/${projectId}/${link.href}`}>
 										<link.icon className='size-5' />
 										<span className='sr-only'>{link.title}</span>
-									</Link>
+									</MotionLink>
 								</TooltipTrigger>
-								<TooltipContent
-									side='right'
-									className='flex items-center gap-4'>
+								<TooltipContent side='right' className='flex items-center gap-4'>
 									{link.title}
 								</TooltipContent>
 							</Tooltip>
-							<Link
-								href={`/app/projects/${projectId}/${link.href}`}
-								className={cn(
-									buttonVariants({ variant: link.variant, size: 'sm' }),
-									link.variant === 'default' && '',
-									'justify-start hidden lg:inline-flex'
-								)}>
-								<link.icon className='mr-2 size-5' />
-								{link.title}
-							</Link>
+							<AnimatePresence mode='wait'>
+								<MotionLink
+									key={link.variant}
+									initial={{ opacity: 0, y: 5 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -5 }}
+									transition={{ duration: 0.2 }}
+									variants={{
+										hidden: { opacity: 0, y: 20 },
+										visible: { opacity: 1, y: 0 },
+									}}
+									href={`/app/projects/${projectId}/${link.href}`}
+									className={cn(
+										buttonVariants({ variant: link.variant, size: 'sm' }),
+										'justify-start hidden lg:inline-flex'
+									)}>
+									<link.icon className='mr-2 size-5' />
+									{link.title}
+								</MotionLink>
+							</AnimatePresence>
 						</Fragment>
 					);
 				})}
-			</nav>
-		</aside>
+			</MotionNav>
+		</MotionAside>
 	);
 }
