@@ -122,19 +122,17 @@ export default function LogInForm() {
 														type={showPassword ? 'text' : 'password'}
 														{...field}
 													/>
-													<motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-														{showPassword ? (
-															<EyeOff
-																className='size-5 absolute right-4 top-2.5 text-muted-foreground hover:text-foreground focus:text-foreground cursor-pointer transition-colors'
-																onClick={() => setShowPassword(false)}
-															/>
-														) : (
-															<Eye
-																className='size-5 absolute right-4 top-2.5 text-muted-foreground hover:text-foreground focus:text-foreground cursor-pointer transition-colors'
-																onClick={() => setShowPassword(true)}
-															/>
-														)}
-													</motion.div>
+													{showPassword ? (
+														<EyeOff
+															className='size-5 absolute right-4 top-2.5 text-muted-foreground hover:text-foreground focus:text-foreground cursor-pointer transition-colors'
+															onClick={() => setShowPassword(false)}
+														/>
+													) : (
+														<Eye
+															className='size-5 absolute right-4 top-2.5 text-muted-foreground hover:text-foreground focus:text-foreground cursor-pointer transition-colors'
+															onClick={() => setShowPassword(true)}
+														/>
+													)}
 												</div>
 											</FormControl>
 											<FormMessage />

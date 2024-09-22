@@ -79,15 +79,15 @@ export default function StatsSection({ reviews }: Props) {
 				className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
 				{/** Card for Total Feedback */}
 				<MotionDiv variants={itemVariants}>
-					<Card>
+					<Card className='bg-primary text-primary-foreground'>
 						<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 							<CardTitle className='text-sm font-medium'>Total Feedback</CardTitle>
-							<MessageSquare className='size-6 text-muted-foreground' />
+							<MessageSquare className='size-6 text-primary-muted-foreground' />
 						</CardHeader>
 						<CardContent>
 							<div className='text-2xl font-bold'>{currentTotalFeedback}</div>
 							{!!totalFeedbackChange && (
-								<p className='text-xs text-muted-foreground'>
+								<p className='text-xs text-primary-muted-foreground'>
 									{formatChange(totalFeedbackChange)} from last month
 								</p>
 							)}

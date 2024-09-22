@@ -48,15 +48,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 	return (
 		<>
 			<Link href={'/app/projects/' + project.id}>
-				<Card className='relative cursor-pointer hover:bg-accent hover:text-accent-foreground hover:shadow-lg transition-all duration-300 ease-in-out h-28'>
+				<Card className='relative cursor-pointer hover:bg-primary hover:text-primary-foreground group hover:shadow-lg transition-all duration-300 ease-in-out h-28'>
 					<CardHeader className='pb-4'>
 						<CardTitle>{project.name}</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<CardDescription className='truncate'>{project.description}</CardDescription>
+						<CardDescription className='truncate group-hover:text-primary-muted-foreground'>
+							{project.description}
+						</CardDescription>
 						<div className='absolute top-2 right-2 space-x-'>
 							<Button onClick={handleGoToSite} variant='link' size='sm'>
-								<Link2Icon className='size-4' />
+								<Link2Icon className='size-4 group-hover:text-primary-foreground' />
 								<span className='sr-only'>Go to site</span>
 							</Button>
 							<Button
@@ -90,9 +92,9 @@ export function AddProjectCard({ isProjectLimitReached }: { isProjectLimitReache
 		<>
 			<Card
 				onClick={() => setOpen(true)}
-				className='relative cursor-pointer hover:bg-accent hover:text-accent-foreground hover:shadow-lg transition-all duration-300 ease-in-out h-28 flex items-center justify-center group'>
+				className='relative cursor-pointer hover:bg-primary hover:text-primary-foreground hover:shadow-lg transition-all duration-300 ease-in-out h-28 flex items-center justify-center group'>
 				<Button variant='link' size='icon'>
-					<PlusIcon className='size-8 group-hover:text-accent-foreground' />
+					<PlusIcon className='size-8 group-hover:text-primary-foreground' />
 					<span className='sr-only'>Add project</span>
 				</Button>
 			</Card>

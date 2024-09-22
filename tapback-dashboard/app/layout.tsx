@@ -82,11 +82,7 @@ export default async function RootLayout({
 	return (
 		<html lang='en'>
 			<body className={`antialiased min-h-screen flex flex-col`}>
-				<ThemeProvider
-					attribute='class'
-					defaultTheme='system'
-					enableSystem
-					disableTransitionOnChange>
+				<ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
 					<SiteHeader user={user} />
 					{children}
 				</ThemeProvider>

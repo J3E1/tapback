@@ -11,7 +11,7 @@ import { useState } from 'react';
 import Logo from './logo';
 import { MotionButton, MotionHeader } from './motion';
 import { ModeToggle } from './theme-toggle';
-import { Button } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 
 export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 	const pathname = usePathname();
@@ -25,32 +25,50 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 		setLoggingOut(false);
 	}
 
+	const navLinks = (
+		<nav className='mr-auto hidden md:flex items-center gap-4 font-medium text-sm lg:gap-6 transition-colors text-foreground/60'>
+			<Link className='hover:text-primary/80' href='/'>
+				Home
+			</Link>
+			<Link className='hover:text-primary/80' href='/pricing'>
+				Pricing
+			</Link>
+			<Link className='hover:text-primary/80' href='/contact'>
+				Contact Us
+			</Link>
+		</nav>
+	);
+
 	const headerVariants = {
 		hidden: { y: -100, opacity: 0 },
 		visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } },
 	};
 
-	if (pathname.includes('login') || pathname.includes('register') || pathname === '/') return null;
+	if (pathname.includes('login') || pathname.includes('register')) return null;
 
 	return (
 		<MotionHeader
 			variants={headerVariants}
 			initial='hidden'
 			animate='visible'
-			className='sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border'>
+			className='sticky top-0 z-50 w-full bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b'>
 			<div
 				className={cn(
 					'h-14 flex items-center px-3 lg:px-5',
 					!params.projectId ? 'container mx-auto' : ''
 				)}>
 				<div className='mr-auto'>
-					<Link href='/app/projects' className='mr-4 flex items-center space-x-2 lg:mr-6'>
+					<Link
+						href='/app/projects'
+						className='mr-4 flex items-center space-x-2 lg:mr-6 text-primary'>
 						<Logo className='size-8' />
-						<span className='font-bold hidden lg:inline'>TapBack</span>
+						<span className='text-primary text-xl font-bold hidden lg:inline'>TapBack</span>
 					</Link>
 				</div>
+
+				{!!!params.projectId && navLinks}
 				<ModeToggle />
-				{!!user && (
+				{!!user ? (
 					<>
 						<Popover>
 							<PopoverTrigger asChild>
@@ -74,11 +92,15 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 									disabled={loggingOut}
 									onClick={logoutHandler}
 									className='w-full'>
-									Logout
+									Log out
 								</MotionButton>
 							</PopoverContent>
 						</Popover>
 					</>
+				) : (
+					<Link href='/app/register' className={cn(buttonVariants({ variant: 'outline' }))}>
+						Sign Up
+					</Link>
 				)}
 			</div>
 		</MotionHeader>

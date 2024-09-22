@@ -153,7 +153,7 @@ export default function ColorPicker({
 						<MotionDiv variants={cardVariants} className='space-y-1'>
 							<Label htmlFor='radius'>Border Radius</Label>
 							<Select onValueChange={setRadius} defaultValue={radius}>
-								<SelectTrigger id='radius' className='w-full'>
+								<SelectTrigger id='radius' className='w-full border-2 border-primary'>
 									<SelectValue placeholder='Select radius' />
 								</SelectTrigger>
 								<SelectContent>

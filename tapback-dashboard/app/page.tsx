@@ -1,160 +1,202 @@
 import Link from 'next/link';
-import { ChevronRight, ArrowUpRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, Github, LinkedinIcon } from 'lucide-react';
+import { Button, buttonVariants } from '@/components/ui/button';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/ui/accordion';
+import { accordionData } from '@/lib/constants';
+import Logo from '@/components/logo';
+import { cn } from '@/lib/utils';
+import { MotionDiv, MotionLink } from '@/components/motion';
 
-export default function Component() {
+export default function HomePage() {
+	const containerVariants = {
+		hidden: { opacity: 0, y: 50 },
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				staggerChildren: 0.2,
+				duration: 0.8,
+			},
+		},
+	};
+
+	const childVariants = {
+		hidden: { opacity: 0, scale: 0.95 },
+		visible: {
+			opacity: 1,
+			scale: 1,
+			transition: { duration: 0.6 },
+		},
+	};
+
+	const fadeIn = {
+		hidden: { opacity: 0 },
+		visible: { opacity: 1, transition: { duration: 0.8 } },
+	};
+
+	const slideUp = {
+		hidden: { opacity: 0, y: 50 },
+		visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+	};
 	return (
-		<div className='min-h-screen bg-black text-white'>
-			<header className='container mx-auto px-4 py-6 flex justify-between items-center'>
-				<div className='text-green-400 text-2xl font-bold'>NFT</div>
-				<nav className='hidden md:flex space-x-6'>
-					<Link className='hover:text-green-400' href='#'>
-						Home
-					</Link>
-					<Link className='hover:text-green-400' href='#'>
-						About
-					</Link>
-					<Link className='hover:text-green-400' href='#'>
-						Blog
-					</Link>
-					<Link className='hover:text-green-400' href='#'>
-						Work
-					</Link>
-				</nav>
-				<button className='bg-green-400 text-black px-4 py-2 rounded-full hover:bg-green-500 transition duration-300'>
-					Join Now
-				</button>
-			</header>
-
+		<div className='min-h-screen bg-background text-foreground'>
 			<main className='container mx-auto px-4'>
-				<section className='py-20 text-center md:text-left md:flex md:items-center md:justify-between'>
-					<div className='md:w-1/2'>
-						<h1 className='text-5xl md:text-6xl font-bold mb-6'>Start Making Money With NFTs</h1>
-						<p className='mb-8 text-gray-400'>
-							Join our community and start profiting from NFT investments today!
+				{/* Hero Section */}
+				<MotionDiv
+					className='py-20 text-center md:text-left md:flex md:items-center md:justify-between space-x-8'
+					initial='hidden'
+					animate='visible'
+					variants={containerVariants}>
+					<MotionDiv className='md:w-1/2' variants={childVariants}>
+						<h1 className='text-4xl md:text-5xl font-bold mb-6'>
+							Capture Customer's Voice, Amplify Your Success
+						</h1>
+						<p className='mb-8 text-muted-foreground'>
+							Empower your business with instant feedback collection. Create, customize, and embed a
+							feedback widget in minutes. Track insights on your personalized dashboard.
 						</p>
-						<button className='bg-green-400 text-black px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-500 transition duration-300 flex items-center mx-auto md:mx-0'>
-							Join Discord
+						<MotionLink
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							href='/app/register'
+							className={cn(buttonVariants({ size: 'lg' }))}>
+							Get Started Free
 							<ChevronRight className='ml-2' />
-						</button>
-					</div>
-					<div className='md:w-1/2 mt-10 md:mt-0'>
+						</MotionLink>
+					</MotionDiv>
+					<MotionDiv className='md:w-1/2 mt-10 md:mt-0' variants={slideUp}>
 						{/* Placeholder for NFT image */}
-						<div className='bg-gray-800 h-80 rounded-lg'></div>
-					</div>
-				</section>
+						<div className='bg-card h-80 rounded-lg'></div>
+					</MotionDiv>
+				</MotionDiv>
 
-				<section className='py-20'>
+				{/* Steps Section */}
+				<MotionDiv
+					className='py-20'
+					initial='hidden'
+					whileInView='visible'
+					variants={containerVariants}
+					viewport={{ once: true, amount: 0.2 }}>
 					<h2 className='text-4xl font-bold mb-12 text-center'>
-						The Ultimate NFT Signals AlphaGroup
+						TapBack - Simple Steps to Success
 					</h2>
 					<div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-						{[1, 2, 3, 4].map(item => (
-							<div key={item} className='bg-gray-900 p-6 rounded-lg text-center'>
-								<div className='text-4xl font-bold mb-2'>{item}</div>
-								<p className='text-gray-400'>Feature description goes here</p>
-							</div>
+						{[1, 2, 3, 4].map(step => (
+							<MotionDiv
+								key={step}
+								className='bg-card p-6 rounded-lg text-center'
+								variants={childVariants}>
+								<div className='text-4xl font-bold mb-2'>{step}</div>
+								<p className='text-muted-foreground'>
+									{step === 1
+										? 'Create or customize your feedback widget in a few clicks.'
+										: step === 2
+										? 'Embed a lightweight script in your website to start collecting feedback instantly.'
+										: step === 3
+										? 'View real-time feedback and analytics on your dashboard.'
+										: 'Use actionable insights to enhance customer experience.'}
+								</p>
+							</MotionDiv>
 						))}
 					</div>
-				</section>
+				</MotionDiv>
 
-				<section className='py-20 md:flex md:items-center md:justify-between'>
-					<div className='md:w-1/2 mb-10 md:mb-0'>
-						<h2 className='text-4xl font-bold mb-6'>Game-Changer For Online Investment Strategy</h2>
-						<p className='text-gray-400 mb-8'>
-							Our platform provides cutting-edge tools and insights for NFT investments.
+				{/* Why TapBack Section */}
+				<MotionDiv className='py-20 md:flex md:items-center md:justify-between space-x-8'>
+					<MotionDiv className='md:w-1/2' variants={slideUp}>
+						{/* Placeholder for Tapback dashboard illustration */}
+						<div className='bg-card h-80 rounded-lg'></div>
+					</MotionDiv>
+					<MotionDiv
+						className='md:w-1/2 mb-10 md:mb-0'
+						initial='hidden'
+						whileInView='visible'
+						variants={fadeIn}>
+						<h2 className='text-4xl font-bold mb-6'>Why TapBack?</h2>
+						<p className='text-muted-foreground mb-8'>
+							TapBack is a no-code feedback solution built for any website. Whether you're a small
+							business or a large enterprise, our tool helps you easily gather valuable customer
+							feedback. Gain insights that boost satisfaction and loyalty.
 						</p>
-						<button className='bg-green-400 text-black px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-500 transition duration-300 flex items-center'>
-							Get Our Program
-							<ArrowUpRight className='ml-2' />
-						</button>
-					</div>
-					<div className='md:w-1/2'>
-						{/* Placeholder for NFT image */}
-						<div className='bg-gray-800 h-80 rounded-lg'></div>
-					</div>
-				</section>
+						<MotionLink
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							href='/app/register'
+							className={cn(buttonVariants({ size: 'lg' }))}>
+							Get Started Free
+							<ChevronRight className='ml-2' />
+						</MotionLink>
+					</MotionDiv>
+				</MotionDiv>
 
-				<section className='py-20'>
-					<h2 className='text-4xl font-bold mb-12 text-center'>Get Popular Nft Here</h2>
-					<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-						{[
-							{ color: 'bg-purple-600', price: '3.4 ETH' },
-							{ color: 'bg-red-600', price: '4.9 ETH' },
-							{ color: 'bg-orange-600', price: '7.8 ETH' },
-							{ color: 'bg-yellow-600', price: '2.0 ETH' },
-							{ color: 'bg-blue-600', price: '3.8 ETH' },
-							{ color: 'bg-indigo-600', price: '5.1 ETH' },
-						].map((item, index) => (
-							<div key={index} className={`${item.color} p-6 rounded-lg`}>
-								<div className='bg-gray-800 h-40 rounded-lg mb-4'></div>
-								<div className='flex justify-between items-center'>
-									<span>Clonex #{index + 1}</span>
-									<span>{item.price}</span>
-								</div>
-								<button className='mt-4 w-full bg-white text-black py-2 rounded-full hover:bg-gray-200 transition duration-300'>
-									Buy Now
-								</button>
-							</div>
-						))}
-					</div>
-				</section>
-
-				<section className='py-20'>
+				{/* FAQ Section */}
+				<MotionDiv
+					className='py-20'
+					initial='hidden'
+					whileInView='visible'
+					variants={containerVariants}>
 					<h2 className='text-4xl font-bold mb-12 text-center'>FAQ</h2>
-					<div className='space-y-6'>
-						{[
-							'NFT FAQ: The ultimate guide for your questions',
-							'Who Are We?',
-							"We're with you the entire way.",
-							'Participate in our NFT Educational Program',
-						].map((item, index) => (
-							<div key={index} className='border-b border-gray-800 pb-6'>
-								<button className='flex justify-between items-center w-full text-left'>
-									<span className='text-xl font-semibold'>{item}</span>
-									<ChevronDown />
-								</button>
-							</div>
+					<Accordion type='single' collapsible>
+						{accordionData.map((item, index) => (
+							<AccordionItem value={`item-${index}`} key={index}>
+								<AccordionTrigger className='text-xl font-semibold'>
+									{item.question}
+								</AccordionTrigger>
+								<AccordionContent className='text-muted-foreground'>{item.answer}</AccordionContent>
+							</AccordionItem>
 						))}
-					</div>
-				</section>
+					</Accordion>
+				</MotionDiv>
 
-				<section className='py-20 bg-green-400 rounded-lg text-black'>
+				{/* Call to Action Section */}
+				<MotionDiv
+					className='py-20 px-6 bg-primary rounded-lg text-background'
+					initial='hidden'
+					whileInView='visible'
+					variants={slideUp}>
 					<div className='text-center md:flex md:items-center md:justify-between md:text-left'>
 						<div className='md:w-1/2 mb-8 md:mb-0'>
 							<h2 className='text-4xl font-bold mb-4'>
-								Take Your NFT Investment To The Next Level?
+								Turn Customer Feedback into Business Growth
 							</h2>
-							<p>Join our exclusive program and maximize your NFT profits today!</p>
+							<p className='text-primary-muted-foreground'>
+								Easily create, customize, and embed feedback widgets on your site. Gather insights
+								that help you improve customer experience and drive success.
+							</p>
 						</div>
-						<button className='bg-black text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-800 transition duration-300'>
-							Join Now
-						</button>
+						<MotionLink
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							href='/app/register'
+							className={cn(buttonVariants({ size: 'lg' }), 'border-2 border-background mr-20')}>
+							Get Started Free
+							<ChevronRight className='ml-2' />
+						</MotionLink>
 					</div>
-				</section>
+				</MotionDiv>
 			</main>
 
-			<footer className='container mx-auto px-4 py-12'>
-				<div className='flex flex-col md:flex-row justify-between items-center'>
-					<div className='text-green-400 text-2xl font-bold mb-6 md:mb-0'>NFT</div>
-					<nav className='flex space-x-6 mb-6 md:mb-0'>
-						<Link className='hover:text-green-400' href='#'>
-							Information
-						</Link>
-						<Link className='hover:text-green-400' href='#'>
-							Blog
-						</Link>
-						<Link className='hover:text-green-400' href='#'>
-							FAQ
-						</Link>
-					</nav>
-					<div className='flex space-x-4'>
-						{/* Placeholder for social media icons */}
-						{[1, 2, 3, 4].map(item => (
-							<div key={item} className='w-8 h-8 bg-gray-800 rounded-full'></div>
-						))}
-					</div>
+			{/* Footer */}
+			<footer className='bg-card/40 mt-12 py-12'>
+				<div className='flex justify-center my-18'>
+					<Logo className='size-32 text-primary spinning-logo' />
 				</div>
-				<div className='mt-8 text-center text-gray-600'>© 2023 NFT. All rights reserved.</div>
+				<div className='mt-8 text-center text-muted-foreground'>
+					© 2024 TapBack. All rights reserved.
+				</div>
+				<div className='flex gap-4 justify-center mt-4'>
+					<a href='https://linkedin.com' target='_blank' rel='noopener noreferrer'>
+						<LinkedinIcon className='size-8 text-muted-foreground hover:text-primary transition-colors' />
+					</a>
+					<a href='https://instagram.com' target='_blank' rel='noopener noreferrer'>
+						<Github className='size-8 text-muted-foreground hover:text-primary transition-colors' />
+					</a>
+				</div>
 			</footer>
 		</div>
 	);
