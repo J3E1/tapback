@@ -12,7 +12,7 @@ export async function getAllProjects() {
 			where: { userId: user.id },
 		});
 
-		return { success: true, projects, projectLimit: user.projectLimit };
+		return { success: true, projects, projectLimit: user.pricingPlan?.projectLimit };
 	} catch (error) {
 		console.error('Error fetching projects:', error);
 		return { success: false, message: 'Could not fetch projects' };
@@ -43,6 +43,7 @@ export async function getAllReviewsByProjectId(projectId: string) {
 	try {
 		const reviews = await prismaClient.review.findMany({
 			where: { projectId },
+			orderBy: { submittedAt: 'desc' },
 		});
 
 		return { success: true, reviews };
@@ -62,5 +63,18 @@ export async function getWidgetByProjectId(projectId: string) {
 	} catch (error) {
 		console.error('Error fetching widget:', error);
 		return { success: false, message: 'Could not fetch widget' };
+	}
+}
+
+export async function getPricingPlanByUserId(userId: string) {
+	try {
+		const pricingPlan = await prismaClient.user.findUnique({
+			where: { id: userId },
+			select: { pricingPlan: true },
+		})
+		return { success: true, pricingPlan: pricingPlan?.pricingPlan } as const;
+	} catch (error) {
+		console.error('Error fetching pricing plan:', error);
+		return { success: false, message: 'Could not fetch pricing plan' } as const;
 	}
 }

@@ -10,55 +10,11 @@ import {
 import { MotionCard, MotionDiv, MotionH2, MotionLi } from '@/components/motion';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { pricingPlans } from '@/lib/constants';
 
 export const metadata: Metadata = {
 	title: 'Pricing',
 };
-
-const pricingPlans = [
-	{
-		name: 'Basic',
-		price: '$19/month',
-		description: 'Perfect for small websites and startups',
-		features: [
-			'Up to 1,000 feedback responses/month',
-			'1 customizable widget',
-			'Basic widget customization',
-			'Email support',
-			'Dashboard with basic analytics',
-		],
-	},
-	{
-		name: 'Pro',
-		price: '$49/month',
-		description: 'Ideal for growing businesses and e-commerce sites',
-		features: [
-			'Up to 10,000 feedback responses/month',
-			'3 customizable widgets',
-			'Advanced widget customization',
-			'Priority email support',
-			'Comprehensive analytics dashboard',
-			'Data export (CSV, JSON)',
-			'Integrations with popular tools',
-		],
-	},
-	{
-		name: 'Enterprise',
-		price: 'Custom',
-		description: 'For large-scale websites and organizations',
-		features: [
-			'Unlimited feedback responses',
-			'Unlimited customizable widgets',
-			'Full widget customization and branding',
-			'24/7 dedicated support',
-			'Advanced analytics with custom reports',
-			'API access for data integration',
-			'Single Sign-On (SSO)',
-			'Custom integrations',
-			'Dedicated account manager',
-		],
-	},
-];
 
 export default function PricingSection() {
 	const containerVariants = {

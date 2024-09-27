@@ -29,18 +29,32 @@ export async function register(formData: RegisterSchema) {
 		// Generate a unique identifier for the user.
 		const userId = generateIdFromEntropySize(10); // 16 characters long
 
+		// Find basic plan id.
+		const basicPlan = await prismaClient.pricingPlan.findFirst({
+			where: {
+				name: 'BASIC',
+			},
+			select: {
+				id: true,
+			}
+		});
+
 		// Create a new user in the database.
-		await prismaClient.user.create({
+		const user = await prismaClient.user.create({
 			data: {
 				id: userId,
 				name: name,
 				email: email.toLowerCase(),
 				password: passwordHash,
+				pricingPlanId: basicPlan?.id,
 			},
+			include: {
+				pricingPlan: true,
+			}
 		});
 
 		// Create a new session for the user.
-		const session = await lucia.createSession(userId, {});
+		const session = await lucia.createSession(userId, { plan: user.pricingPlan?.name, projectLimit: user.pricingPlan?.projectLimit || 0 });
 
 		// Set the session cookie on the client.
 		const sessionCookie = lucia.createSessionCookie(session.id);
@@ -77,6 +91,9 @@ export async function login(formData: LoginSchema) {
 		// Find the user in the database.
 		const existingUser = await prismaClient.user.findUnique({
 			where: { email: email.toLowerCase() },
+			include: {
+				pricingPlan: true,
+			}
 		});
 
 		// If the user doesn't exist, return an error.
@@ -97,7 +114,7 @@ export async function login(formData: LoginSchema) {
 		}
 
 		// Create a new session for the user.
-		const session = await lucia.createSession(existingUser.id, {});
+		const session = await lucia.createSession(existingUser.id,  { });
 
 		// Set the session cookie on the client.
 		const sessionCookie = lucia.createSessionCookie(session.id);

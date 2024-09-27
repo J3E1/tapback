@@ -68,7 +68,7 @@ export const columns: ColumnDef<IReview>[] = [
 			);
 		},
 		cell: ({ row }) => {
-			const formatted = new Intl.DateTimeFormat('en-US', {
+			const formatted = new Intl.DateTimeFormat('en-UK', {
 				day: '2-digit',
 				month: '2-digit',
 				year: 'numeric',

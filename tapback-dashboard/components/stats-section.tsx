@@ -61,12 +61,8 @@ export default function StatsSection({ reviews }: Props) {
 							<SelectValue placeholder='Last 90 days' />
 						</SelectTrigger>
 						<SelectContent>
-							<MotionDiv variants={itemVariants}>
 								<SelectItem value='all'>All time</SelectItem>
-							</MotionDiv>
-							<MotionDiv variants={itemVariants}>
 								<SelectItem value='thisMonth'>This Month</SelectItem>
-							</MotionDiv>
 						</SelectContent>
 					</Select>
 				</MotionDiv>
@@ -141,7 +137,7 @@ export default function StatsSection({ reviews }: Props) {
 						<CardContent>
 							<div className='text-2xl font-bold'>
 								{mostRecentFeedback
-									? new Intl.DateTimeFormat('en-US', {
+									? new Intl.DateTimeFormat('en-UK', {
 											day: '2-digit',
 											month: '2-digit',
 											year: 'numeric',

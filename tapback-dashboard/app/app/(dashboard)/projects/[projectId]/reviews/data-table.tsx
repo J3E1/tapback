@@ -30,6 +30,7 @@ import {
 import { useState } from 'react';
 import { MotionButton, MotionDiv, MotionInput, MotionTableRow } from '@/components/motion';
 import { AnimatePresence } from 'framer-motion';
+import ExportReviewsButton from '@/components/export-reviews-button';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -116,12 +117,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					onChange={event => table.getColumn('email')?.setFilterValue(event.target.value)}
 					className='max-w-sm'
 				/>
+				<ExportReviewsButton reviews={data} />
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<MotionButton
 							variants={itemVariants}
 							variant='outline'
-							className='ml-auto'
+							className='ml-2'
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}>
 							Columns

@@ -11,6 +11,7 @@ import { accordionData } from '@/lib/constants';
 import Logo from '@/components/logo';
 import { cn } from '@/lib/utils';
 import { MotionDiv, MotionLink } from '@/components/motion';
+import HeroSectionWidget from '@/components/hero-section-widget';
 
 export default function HomePage() {
 	const containerVariants = {
@@ -64,14 +65,13 @@ export default function HomePage() {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							href='/app/register'
-							className={cn(buttonVariants({ size: 'lg' }))}>
+							className={cn(buttonVariants({ size: 'lg' }), 'group')}>
 							Get Started Free
-							<ChevronRight className='ml-2' />
+							<ChevronRight className='ml-2 group-hover:translate-x-2 transition-transform duration-300' />
 						</MotionLink>
 					</MotionDiv>
 					<MotionDiv className='md:w-1/2 mt-10 md:mt-0' variants={slideUp}>
-						{/* Placeholder for NFT image */}
-						<div className='bg-card h-80 rounded-lg'></div>
+						<HeroSectionWidget/>
 					</MotionDiv>
 				</MotionDiv>
 
@@ -127,9 +127,9 @@ export default function HomePage() {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							href='/app/register'
-							className={cn(buttonVariants({ size: 'lg' }))}>
+							className={cn(buttonVariants({ size: 'lg' }), 'group')}>
 							Get Started Free
-							<ChevronRight className='ml-2' />
+							<ChevronRight className='ml-2 group-hover:translate-x-2 transition-transform duration-300' />
 						</MotionLink>
 					</MotionDiv>
 				</MotionDiv>
@@ -173,9 +173,9 @@ export default function HomePage() {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							href='/app/register'
-							className={cn(buttonVariants({ size: 'lg' }), 'border-2 border-background mr-20')}>
+							className={cn(buttonVariants({ size: 'lg' }), 'border-2 border-background mr-20 hover:bg-background hover:text-foreground group')}>
 							Get Started Free
-							<ChevronRight className='ml-2' />
+							<ChevronRight className='ml-2 group-hover:translate-x-2 transition-transform duration-300' />
 						</MotionLink>
 					</div>
 				</MotionDiv>

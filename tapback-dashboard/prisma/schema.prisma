@@ -11,20 +11,29 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id           String  @id
-  email        String  @unique
-  password     String
-  name         String?
-  projectLimit Int     @default(3)
+  id            String  @id
+  email         String  @unique
+  password      String
+  name          String?
+  pricingPlanId String? @db.Uuid
 
-  projects Project[]
-  sessions Session[]
+  projects    Project[]
+  sessions    Session[]
+  pricingPlan PricingPlan? @relation(fields: [pricingPlanId], references: [id])
 
   createdAt DateTime @default(now())
+}
+
+model PricingPlan {
+  id           String @id @default(uuid()) @db.Uuid
+  reviewsLimit Int
+  projectLimit Int
+  name         Plan @default(BASIC)
+  price        String // Price as a string to accommodate 'Custom' for Enterprise
+  users        User[] // Relationship with the User model
 }
 
 model Session {
@@ -39,6 +48,11 @@ enum Rating {
   BAD // Represent 'Bad'
   DECENT // Represent 'Decent'
   LOVE_IT // Represent 'Love it!'
+}
+enum Plan {
+  BASIC // Represent 'Basic'
+  PRO // Represent 'Pro'
+  ENTERPRISE // Represent 'Enterprise'
 }
 
 model Widget {

@@ -17,7 +17,15 @@ const emojis: Record<Rating, string> = {
 };
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function App() {
+const submitRating = {
+	Bad: 'BAD',
+	Decent: 'DECENT',
+	'Love it!': 'LOVE_IT',
+};
+
+const API_HOST = import.meta.env.VITE_API_HOST;
+
+export default function App({ widgetId }: { widgetId?: string }) {
 	const [formState, setFormState] = useState<FormState>({
 		rating: null,
 		comment: '',
@@ -27,30 +35,38 @@ export default function App() {
 	const [isSubmitted, setIsSubmitted] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [formIsOpen, setFormIsOpen] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
+	const [widgetStyles, setWidgetStyles] = useState({
+		'--background': '',
+		'--primary': '',
+		'--typography': '',
+		'--radius': '',
+	});
 
 	useEffect(() => {
 		document.addEventListener('mousedown', handleClickOutside);
+		API_HOST && widgetId && getStyles();
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
 
-	const handleClickOutside = (event: MouseEvent) => {
-		const widget = document.querySelector('#widget-container');
-		const btn = document.querySelector('#widget-trigger-btn');
-		if (
-			widget &&
-			!widget.contains(event.target as Node) &&
-			btn &&
-			!btn.contains(event.target as Node)
-		) {
-			setFormIsOpen(false);
-		}
+	const getStyles = async () => {
+		setIsLoading(true);
+		const response = await fetch(`${API_HOST}/api/widget/${widgetId}`);
+		const data = await response.json();
+		setWidgetStyles({
+			'--background': data.backgroundColor,
+			'--primary': data.primaryColor,
+			'--typography': data.typographyColor,
+			'--radius': data.radius,
+		});
+		setIsLoading(false);
 	};
-	const validateEmail = (email: string) => emailRegex.test(email);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const submitReview = async (e: React.FormEvent) => {
 		e.preventDefault();
+
 		if (!validateEmail(formState.email)) {
 			setFormState(prevState => ({
 				...prevState,
@@ -59,16 +75,36 @@ export default function App() {
 			return;
 		}
 		setIsLoading(true);
-		setTimeout(() => {
+		const response = await fetch(`${API_HOST}/api/submit-review/${widgetId}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email: formState.email,
+				feedback: formState.comment,
+				rating: submitRating[formState.rating!],
+			}),
+		});
+		if (!response.ok) {
 			setIsLoading(false);
 			setIsSubmitted(true);
-		}, 4000);
-		console.log({
-			rating: formState.rating,
-			email: formState.email,
-			comment: formState.comment,
-		});
+			setErrorMessage('Something went wrong! Please try again later');
+			return;
+		}
+		setErrorMessage('');
+		setIsLoading(false);
+		setIsSubmitted(true);
 	};
+
+	const handleClickOutside = (event: MouseEvent) => {
+		const widget = document.querySelector('#widget-container');
+		const btn = document.querySelector('#widget-trigger-btn');
+		if (widget && !widget.contains(event.target as Node) && btn && !btn.contains(event.target as Node)) {
+			setFormIsOpen(false);
+		}
+	};
+	const validateEmail = (email: string) => emailRegex.test(email);
 
 	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormState(prevState => ({
@@ -87,6 +123,8 @@ export default function App() {
 	};
 
 	const handleRatingChange = (rating: Rating | null) => {
+		if (!rating) return;
+
 		setFormState(prevState => ({
 			...prevState,
 			rating,
@@ -105,28 +143,26 @@ export default function App() {
 	};
 
 	const preSubmitLayout = (
-		<motion.div
-			key='feedback-form'
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			exit={{ opacity: 0 }}>
+		<motion.div key='feedback-form' initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 			<div className='flex justify-between items-center mb-4'>
 				<motion.h2
 					className='text-xl font-semibold text-typography'
 					initial={{ y: -20, opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
-					transition={{ delay: 0.2 }}>
+					transition={{ delay: 0.2 }}
+				>
 					Rate your experience
 				</motion.h2>
 				<motion.button
 					onClick={() => setFormIsOpen(prev => !prev)}
 					className='text-typography/30 hover:text-typography/60'
 					whileHover={{ scale: 1.065 }}
-					whileTap={{ scale: 0.9 }}>
+					whileTap={{ scale: 0.9 }}
+				>
 					<X size={20} />
 				</motion.button>
 			</div>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={submitReview}>
 				<div className='flex justify-between mb-4 gap-4'>
 					{(Object.keys(emojis) as Rating[]).map(option => (
 						<motion.button
@@ -134,14 +170,13 @@ export default function App() {
 							type='button'
 							onClick={() => handleRatingChange(option)}
 							className={`w-full flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 box-border text-typography ${
-								formState.rating === option
-									? 'border-primary'
-									: 'border-primary/10 hover:border-primary'
+								formState.rating === option ? 'border-primary' : 'border-primary/10 hover:border-primary'
 							}`}
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							whileHover={{ scale: 1.065 }}
-							whileTap={{ scale: 1 }}>
+							whileTap={{ scale: 1 }}
+						>
 							<span>{emojis[option]}</span>
 							<span>{option}</span>
 						</motion.button>
@@ -149,14 +184,8 @@ export default function App() {
 				</div>
 				<AnimatePresence>
 					{formState.rating && (
-						<motion.div
-							className='space-y-4'
-							initial={{ opacity: 0, height: 0 }}
-							animate={{ opacity: 1, height: 'auto' }}
-							exit={{ opacity: 0, height: 0 }}>
-							<motion.div
-								animate={formState.isEmailValid ? {} : { x: [-10, 10, -10, 10, 0] }}
-								transition={{ duration: 0.4 }}>
+						<motion.div className='space-y-4' initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
+							<motion.div animate={formState.isEmailValid ? {} : { x: [-10, 10, -10, 10, 0] }} transition={{ duration: 0.4 }}>
 								<input
 									value={formState.email}
 									onChange={handleEmailChange}
@@ -165,11 +194,7 @@ export default function App() {
 										!formState.isEmailValid ? 'border-destructive' : 'border-primary/10'
 									}`}
 								/>
-								{!formState.isEmailValid && (
-									<p className='text-destructive text-sm mt-2 mx-3'>
-										Please enter a valid email address
-									</p>
-								)}
+								{!formState.isEmailValid && <p className='text-destructive text-sm mt-2 mx-3'>Please enter a valid email address</p>}
 							</motion.div>
 							<motion.textarea
 								value={formState.comment}
@@ -197,12 +222,14 @@ export default function App() {
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0, height: 0 }}
-			className='text-center h-72 flex flex-col place-content-between'>
+			className='text-center h-72 flex flex-col place-content-between'
+		>
 			<motion.div
 				className='flex justify-center mt-8'
 				initial={{ scale: 0 }}
 				animate={{ scale: 1 }}
-				transition={{ type: 'spring', stiffness: 260, damping: 20 }}>
+				transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+			>
 				<div className='flex justify-center mb-6 relative'>
 					<motion.div
 						initial={{ scale: 0, rotate: -45 }}
@@ -212,7 +239,8 @@ export default function App() {
 							stiffness: 260,
 							damping: 20,
 							delay: 0.2,
-						}}>
+						}}
+					>
 						<MessageSquare className='text-typography/15 size-20' />
 					</motion.div>
 					<motion.div
@@ -223,25 +251,36 @@ export default function App() {
 							stiffness: 260,
 							damping: 20,
 							delay: 0.4,
-						}}>
+						}}
+					>
 						<MessageSquare className='text-typography/10 size-12 ml-2 -scale-x-100' />
 					</motion.div>
 				</div>
 			</motion.div>
-			<motion.h2
-				className='text-2xl text-typography font-semibold mb-2'
-				initial={{ y: -20, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				transition={{ delay: 0.2 }}>
-				Thank you!
-			</motion.h2>
-			<motion.p
-				className='text-typography/40 mb-6 font-medium'
-				initial={{ y: 20, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				transition={{ delay: 0.3 }}>
-				Your feedback helps us improve, appreciate the time you took to send us the feedback!
-			</motion.p>
+			{errorMessage ? (
+				<motion.h2
+					className='text-xl text-destructive font-semibold mb-2'
+					initial={{ y: -20, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					transition={{ delay: 0.2 }}
+				>
+					{errorMessage}
+				</motion.h2>
+			) : (
+				<>
+					<motion.h2
+						className='text-2xl text-typography font-semibold mb-2'
+						initial={{ y: -20, opacity: 0 }}
+						animate={{ y: 0, opacity: 1 }}
+						transition={{ delay: 0.2 }}
+					>
+						Thank you!
+					</motion.h2>
+					<motion.p className='text-typography/40 mb-6 font-medium' initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+						Your feedback helps us improve, appreciate the time you took to send us the feedback!
+					</motion.p>
+				</>
+			)}
 			<MotionButton onClick={handleDone}>Done</MotionButton>
 		</motion.div>
 	);
@@ -252,7 +291,8 @@ export default function App() {
 			className='flex items-center justify-center h-72'
 			initial={{ opacity: 0, y: 50 }}
 			animate={{ opacity: 1, y: 0 }}
-			exit={{ opacity: 0, y: -20 }}>
+			exit={{ opacity: 0, y: -20 }}
+		>
 			<div className='flex space-x-2'>
 				<motion.div
 					className='w-5 h-5 bg-primary rounded-full'
@@ -283,6 +323,8 @@ export default function App() {
 		</motion.div>
 	);
 
+	if (Object.values(widgetStyles).every(v => v === '')) return <></>;
+
 	return (
 		<>
 			<AnimatePresence mode='popLayout'>
@@ -292,33 +334,31 @@ export default function App() {
 						className='relative' // Make sure the wrapper stays fixed
 					>
 						<motion.div
+							style={widgetStyles as React.CSSProperties}
 							initial={{ opacity: 0, y: 50 }}
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
-							className='fixed bottom-20 right-5 bg-background/50 rounded-lg shadow-lg p-6 w-[28rem] mx-auto backdrop-blur-2xl supports-[backdrop-filter]:bg-background/55'>
-							<AnimatePresence mode='wait'>
-								{!isLoading ? (isSubmitted ? submittedLayout : preSubmitLayout) : loadingLayout}
-							</AnimatePresence>
+							className='fixed bottom-20 right-5 bg-background/50 rounded-lg shadow-lg p-6 w-[28rem] mx-auto backdrop-blur-2xl supports-[backdrop-filter]:bg-background/55'
+						>
+							<AnimatePresence mode='wait'>{!isLoading ? (isSubmitted ? submittedLayout : preSubmitLayout) : loadingLayout}</AnimatePresence>
 						</motion.div>
 					</motion.div>
 				)}
 			</AnimatePresence>
 			{/* Feedback Button */}
 			<button
+				style={widgetStyles as React.CSSProperties}
 				id='widget-trigger-btn'
 				onClick={() => setFormIsOpen(prev => !prev)}
-				className='flex gap-2 justify-center items-center fixed bottom-5 right-5 py-3 px-5 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90 transition duration-300'>
+				className={`flex gap-2 justify-center items-center fixed bottom-5 right-5 py-3 px-5 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90 transition duration-300 backdrop-blur-2xl`}
+			>
 				<MessageSquare size={24} /> Feedback
 			</button>
 		</>
 	);
 }
 
-const MotionButton = ({
-	onClick,
-	className,
-	children,
-}: ButtonHTMLAttributes<HTMLButtonElement>) => (
+const MotionButton = ({ onClick, className, children }: ButtonHTMLAttributes<HTMLButtonElement>) => (
 	<motion.button
 		onClick={onClick}
 		className={`w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium ${
@@ -328,7 +368,8 @@ const MotionButton = ({
 		animate={{ opacity: 1, y: 0 }}
 		transition={{ delay: 0.4 }}
 		whileHover={{ scale: 1.03 }}
-		whileTap={{ scale: 0.97 }}>
+		whileTap={{ scale: 0.97 }}
+	>
 		{children}
 	</motion.button>
 );

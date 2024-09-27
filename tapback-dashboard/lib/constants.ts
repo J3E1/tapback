@@ -48,3 +48,44 @@ export const accordionData = [
 			'Yes, TapBack offers a free tier with basic features. For advanced features, you can upgrade to a paid plan.',
 	},
 ];
+
+export const pricingPlans = [
+	{
+		name: 'Basic',
+		price: '$0/month',
+		description: 'Perfect for small websites and startups',
+		features: [
+			'Up to 100 feedback responses/month',
+			'1 project/customizable widget',
+			'Full widget customization',
+			'Dashboard with basic analytics',
+		],
+	},
+	{
+		name: 'Pro',
+		price: '$19/month',
+		description: 'Ideal for growing businesses and e-commerce sites',
+		features: [
+			'Up to 1,000 feedback responses/month',
+			'3 customizable widgets',
+			'Full widget customization',
+			'Comprehensive analytics dashboard',
+			'Data export (CSV, JSON)',
+		],
+	},
+	{
+		name: 'Enterprise',
+		price: 'Custom',
+		description: 'For large-scale websites and organizations',
+		features: [
+			'Unlimited feedback responses',
+			'Unlimited customizable widgets',
+			'Full widget customization',
+			'24/7 dedicated support',
+			'Advanced analytics',
+			'Single Sign-On (SSO)',
+			'Dedicated account manager',
+			'Data export (CSV, JSON)',
+		],
+	},
+];

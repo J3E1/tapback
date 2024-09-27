@@ -27,7 +27,6 @@ export function ProjectSwitcher({ projects }: ProjectSwitcherProps) {
 	const onChangeProject = (projectId: string) => {
 		setSelectedProject(projectId);
 		const stage = pathName.split('/').pop();
-		console.log('🚀 ~ file: project-switcher.tsx:24 ~ onChangeProject ~ stage:', stage);
 		if (stage === params.projectId) router.push(`/app/projects/${projectId}`);
 		else router.push(`/app/projects/${projectId}/${stage}`);
 	};

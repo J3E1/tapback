@@ -50,6 +50,6 @@ export const widgetSchema = z.object({
 
 export const submitReviewSchema = z.object({
 	email: z.string().email(),
-	feedback: z.string().min(10),
+	feedback: z.string(),
 	rating: z.enum(['BAD', 'DECENT', 'LOVE_IT']),
 });

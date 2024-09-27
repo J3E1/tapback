@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { validateRequest } from '@/lib/auth';
 import type { Metadata } from 'next';
 import './globals.css';
+import { getPricingPlanByUserId } from '@/lib/query.services';
 
 export const metadata: Metadata = {
 	title: {
@@ -11,15 +12,7 @@ export const metadata: Metadata = {
 	},
 	description:
 		'TapBack: Create customizable feedback widgets for your website. Embed with a single line of code and start collecting valuable customer insights instantly.',
-	keywords: [
-		'customer feedback',
-		'website widget',
-		'user insights',
-		'customer experience',
-		'feedback collection',
-		'SaaS',
-		'analytics dashboard',
-	],
+	keywords: ['customer feedback', 'website widget', 'user insights', 'customer experience', 'feedback collection', 'SaaS', 'analytics dashboard'],
 	authors: [{ name: 'J3E1' }],
 	creator: 'J3E1',
 	publisher: 'J3E1',
@@ -48,8 +41,7 @@ export const metadata: Metadata = {
 	twitter: {
 		card: 'summary_large_image',
 		title: 'TapBack - Customer Feedback Made Simple',
-		description:
-			'Create, customize, and embed feedback widgets. One line of code to start collecting valuable customer insights.',
+		description: 'Create, customize, and embed feedback widgets. One line of code to start collecting valuable customer insights.',
 		creator: '@tapback',
 		images: ['https://www.tapback.com/twitter-image.jpg'],
 	},
@@ -79,11 +71,19 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const { user } = await validateRequest();
+	const userData = user
+		? {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				plan: user.pricingPlan?.name || 'BASIC',
+		  }
+		: null;
 	return (
 		<html lang='en'>
 			<body className={`antialiased min-h-screen flex flex-col`}>
 				<ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
-					<SiteHeader user={user} />
+					<SiteHeader user={userData} />
 					{children}
 				</ThemeProvider>
 			</body>

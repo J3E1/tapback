@@ -24,3 +24,5 @@ export interface IWidget {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+export type Plan = 'BASIC' | 'PRO' | 'ENTERPRISE';

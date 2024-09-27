@@ -1,6 +1,7 @@
 'use client';
 import { X } from 'lucide-react';
-import { ButtonHTMLAttributes, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { ButtonHTMLAttributes, use, useState } from 'react';
 
 type Rating = 'Bad' | 'Decent' | 'Love it!';
 interface FormState {
@@ -18,6 +19,7 @@ const emojis: Record<Rating, string> = {
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Widget() {
+	const pathName = usePathname();
 	const [formState, setFormState] = useState<FormState>({
 		rating: null,
 		comment: '',
@@ -46,9 +48,7 @@ export default function Widget() {
 		}));
 	};
 
-	const handleInputChange = (
-		e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-	) => {
+	const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormState(prevState => ({
 			...prevState,
@@ -66,9 +66,7 @@ export default function Widget() {
 	const preSubmitLayout = (
 		<div key='feedback-form'>
 			<div className='flex justify-between items-center mb-4'>
-				<h2 className='text-xl font-semibold text-typography'>
-					Rate your experience
-				</h2>
+				<h2 className='text-xl font-semibold text-typography'>Rate your experience</h2>
 				<button className='text-typography/30 hover:text-typography/60'>
 					<X size={20} />
 				</button>
@@ -81,10 +79,9 @@ export default function Widget() {
 							type='button'
 							onClick={() => handleRatingChange(option)}
 							className={`w-full flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 box-border text-typography ${
-								formState.rating === option
-									? 'border-primary'
-									: 'border-primary/10 hover:border-primary'
-							}`}>
+								formState.rating === option ? 'border-primary' : 'border-primary/10 hover:border-primary'
+							}`}
+						>
 							<span>{emojis[option]}</span>
 							<span>{option}</span>
 						</button>
@@ -96,17 +93,11 @@ export default function Widget() {
 							value={formState.email}
 							onChange={handleEmailChange}
 							placeholder='Your email (required)'
-							className={`w-full  px-3 py-2 border bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography ${
-								!formState.isEmailValid
-									? 'border-destructive'
-									: 'border-primary/10'
+							className={`w-full  px-3 py-2 border bg-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography ${
+								!formState.isEmailValid ? 'border-destructive' : 'border-primary/10'
 							}`}
 						/>
-						{!formState.isEmailValid && (
-							<p className='text-destructive text-sm mt-2 mx-3'>
-								Please enter a valid email address
-							</p>
-						)}
+						{!formState.isEmailValid && <p className='text-destructive text-sm mt-2 mx-3'>Please enter a valid email address</p>}
 					</div>
 					<textarea
 						value={formState.comment}
@@ -114,32 +105,29 @@ export default function Widget() {
 						id='comment'
 						onChange={handleInputChange}
 						placeholder='Tell us more (optional)'
-						className='w-full border-primary/10 px-3 py-2 border bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography'
+						className='w-full border-primary/10 px-3 py-2 border bg-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 rounded-lg focus:outline-none text-typography'
 						rows={3}
 					/>
-					<MotionButton>Submit your feedback</MotionButton>
+					{/* Fix for button not working properly on landing page */}
+					{pathName !== '/' ? (
+						<button
+							style={{ transition: 'all 0.2s ease-in-out' }}
+							className='w-full bg-primary text-white hover:bg-primary/90 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium'
+						>
+							Submit your feedback
+						</button>
+					) : (
+						<div
+							style={{ transition: 'all 0.2s ease-in-out' }}
+							className='w-full text-center bg-primary text-white px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium'
+						>
+							Submit your feedback
+						</div>
+					)}
 				</div>
 			</form>
 		</div>
 	);
 
-	return (
-		<div className='bg-background rounded-lg shadow-lg p-6 w-[28rem] mx-auto'>
-			{preSubmitLayout}
-		</div>
-	);
+	return <div className='bg-background rounded-lg shadow-lg p-6 w-[28rem] mx-auto'>{preSubmitLayout}</div>;
 }
-
-const MotionButton = ({
-	onClick,
-	className,
-	children,
-}: ButtonHTMLAttributes<HTMLButtonElement>) => (
-	<button
-		onClick={onClick}
-		className={`w-full bg-primary text-white hover:bg-primary/90 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium ${
-			className || ''
-		}`}>
-		{children}
-	</button>
-);

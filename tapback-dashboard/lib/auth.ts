@@ -1,8 +1,10 @@
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
-import { Lucia, Session, User } from 'lucia';
+import { Lucia, Session, User, UserId } from 'lucia';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 import prismaClient from './prisma-client';
+import { Plan } from '@/typings/types';
+import { $Enums, PricingPlan } from '@prisma/client';
 
 const adapter = new PrismaAdapter(prismaClient.session, prismaClient.user);
 
@@ -19,14 +21,29 @@ export const lucia = new Lucia(adapter, {
 			// attributes has the type of DatabaseUserAttributes
 			name: attributes.name,
 			email: attributes.email,
-			projectLimit: attributes.projectLimit,
+			pricingPlan: attributes.pricingPlan,
 		};
 	},
 });
 
 export const validateRequest = cache(
 	async (): Promise<
-		{ user: User; session: Session } | { user: null; session: null }
+		| {
+				user: {
+					pricingPlan: {
+						id: string;
+						reviewsLimit: number;
+						projectLimit: number;
+						name: $Enums.Plan;
+						price: string;
+					} | null;
+					id: UserId;
+					name: string;
+					email: string;
+				};
+				session: Session;
+		  }
+		| { user: null; session: null }
 	> => {
 		const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
 		if (!sessionId) {
@@ -35,28 +52,43 @@ export const validateRequest = cache(
 				session: null,
 			};
 		}
-
+		let pricingPlan: PricingPlan | null = null;
 		const result = await lucia.validateSession(sessionId);
+		if (result.user) {
+			const user = await prismaClient.user.findUnique({
+				where: {
+					id: result.user.id,
+				},
+				include: {
+					pricingPlan: true,
+				},
+			});
+			pricingPlan = user?.pricingPlan || null;
+		}
+
 		// next.js throws when you attempt to set cookie when rendering page
 		try {
 			if (result.session && result.session.fresh) {
 				const sessionCookie = lucia.createSessionCookie(result.session.id);
-				cookies().set(
-					sessionCookie.name,
-					sessionCookie.value,
-					sessionCookie.attributes
-				);
+				cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 			}
 			if (!result.session) {
 				const sessionCookie = lucia.createBlankSessionCookie();
-				cookies().set(
-					sessionCookie.name,
-					sessionCookie.value,
-					sessionCookie.attributes
-				);
+				cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 			}
 		} catch {}
-		return result;
+
+		if (result.session && result.user) {
+			return {
+				user: { ...result.user, pricingPlan },
+				session: result.session,
+			};
+		} else {
+			return {
+				user: null,
+				session: null,
+			};
+		}
 	}
 );
 
@@ -69,5 +101,5 @@ declare module 'lucia' {
 interface DatabaseUserAttributes {
 	name: string;
 	email: string;
-	projectLimit: number;
+	pricingPlan: PricingPlan;
 }

@@ -1,7 +1,8 @@
 // API to save review in db
 import prismaClient from '@/lib/prisma-client';
 import { submitReviewSchema } from '@/lib/schemas';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
 /**
  * POST /api/submit-review/:widgetId
@@ -13,18 +14,16 @@ import { NextRequest } from 'next/server';
  * @param {string} req.body.feedback - The feedback given by the reviewer
  * @param {"BAD" | "DECENT" | "LOVE_IT"} req.body.rating - The rating given by the reviewer
  *
- * @returns {Promise<Response>}
+ * @returns {Promise<NextResponse>}
  */
-export async function POST(req: NextRequest): Promise<Response> {
+export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
 		const widgetId = req.nextUrl.pathname.split('/').pop();
 		const body = await req.json();
 
 		const result = submitReviewSchema.safeParse(body);
 		if (!result.success) {
-			return new Response(
-				JSON.stringify({ success: false, error: result.error.message })
-			);
+			return new NextResponse(JSON.stringify({ success: false, error: result.error.errors[0].message }), { status: 400 });
 		}
 
 		const { email, feedback, rating } = result.data;
@@ -33,12 +32,34 @@ export async function POST(req: NextRequest): Promise<Response> {
 			where: {
 				id: widgetId!,
 			},
+			select: {
+				project: {
+					select: {
+						user: {
+							select: {
+								pricingPlan: {
+									select: {
+										reviewsLimit: true,
+									},
+								},
+							},
+						},
+					},
+				},
+				projectId: true,
+			},
+		});
+		if (!widget) {
+			return new NextResponse(JSON.stringify({ success: false, error: 'Project not found' }), { status: 404 });
+		}
+		const reviewCount = await prismaClient.review.count({
+			where: {
+				projectId: widget.projectId,
+			},
 		});
 
-		if (!widget) {
-			return new Response(
-				JSON.stringify({ success: false, error: 'Not found' })
-			);
+		if (widget.project?.user?.pricingPlan?.reviewsLimit !== undefined && reviewCount >= widget.project.user.pricingPlan.reviewsLimit) {
+			return new NextResponse(JSON.stringify({ success: false, error: 'Plan limit reached' }), { status: 400 });
 		}
 
 		await prismaClient.review.create({
@@ -50,27 +71,12 @@ export async function POST(req: NextRequest): Promise<Response> {
 			},
 		});
 
-		return new Response(JSON.stringify({ success: true }));
+		return new NextResponse(JSON.stringify({ success: true }), { status: 200 });
 	} catch (error) {
-		console.log('🚀 ~ file: route.ts:31 ~ POST ~ error:', error);
-		return new Response(
-			JSON.stringify({ success: false, error: 'Something went wrong' })
-		);
+		if (error instanceof ZodError) {
+			return new NextResponse(JSON.stringify({ success: false, error: error.issues[0].message }), { status: 400 });
+		}
+		console.log('Error submitting review:', error);
+		return new NextResponse(JSON.stringify({ success: false, error: 'Something went wrong' }), { status: 500 });
 	}
 }
-// export async function POST(req: NextRequest) {
-// 	const widgetId = req.nextUrl.pathname.split('/').pop();
-// 	console.log('🚀 ~ file: route.ts:9 ~ POST ~ widgetId:', widgetId);
-
-// 	try {
-// 		const reviews = await prismaClient.review.createMany({
-// 			data: dummyReview,
-// 		});
-// 		return new Response(JSON.stringify({ success: true }));
-// 	} catch (error) {
-// 		console.log('🚀 ~ file: route.ts:31 ~ POST ~ error:', error);
-// 		return new Response(
-// 			JSON.stringify({ success: false, error: 'Something went wrong' })
-// 		);
-// 	}
-// }

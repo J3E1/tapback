@@ -12,8 +12,9 @@ import Logo from './logo';
 import { MotionButton, MotionHeader } from './motion';
 import { ModeToggle } from './theme-toggle';
 import { Button, buttonVariants } from './ui/button';
+import { $Enums } from '@prisma/client';
 
-export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
+export function SiteHeader({ user }: Readonly<{ user: { id: string; name: string; email: string; plan:$Enums.Plan} | null }>) {
 	const pathname = usePathname();
 	const params = useParams() as Record<string, string>;
 
@@ -36,6 +37,11 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 			<Link className='hover:text-primary/80' href='/contact'>
 				Contact Us
 			</Link>
+			{!!user && (
+				<Link className='hover:text-primary/80' href='/app/projects'>
+					My Projects
+				</Link>
+			)}
 		</nav>
 	);
 
@@ -59,7 +65,7 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 				)}>
 				<div className='mr-auto'>
 					<Link
-						href='/app/projects'
+						href={user ? '/app/projects': '/'}
 						className='mr-4 flex items-center space-x-2 lg:mr-6 text-primary'>
 						<Logo className='size-8' />
 						<span className='text-primary text-xl font-bold hidden lg:inline'>TapBack</span>
@@ -78,6 +84,7 @@ export function SiteHeader({ user }: Readonly<{ user: User | null }>) {
 							</PopoverTrigger>
 							<PopoverContent>
 								<div className='flex flex-col items-center pb-4 gap-1'>
+									<p>{user.plan.at(0)?.toUpperCase() + user.plan.slice(1).toLocaleLowerCase()} Plan</p>
 									<p>{user.name}</p>
 									<p>{user.email}</p>
 								</div>
