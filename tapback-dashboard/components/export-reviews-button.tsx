@@ -2,10 +2,10 @@
 import { useState } from 'react';
 import { Parser } from 'json2csv';
 import { MotionButton } from './motion';
+import { Review } from '@prisma/client';
 
 const fields = ['id', 'email', 'feedback', 'rating', 'submittedAt'];
-type Props = { reviews: any[] };
-export default function ExportReviewsButton({ reviews }: Props) {
+export default function ExportReviewsButton<T extends Review>({ reviews }: { reviews: T[] }) {
 	const [loading, setLoading] = useState(false);
 
 	// Function to handle exporting reviews
@@ -15,7 +15,7 @@ export default function ExportReviewsButton({ reviews }: Props) {
 			// Convert reviews to CSV format
 			const json2csvParser = new Parser({ fields });
 			reviews.forEach(review => {
-				review.submittedAt = new Date(review.submittedAt).toISOString();
+				review.submittedAt = new Date(review.submittedAt).toISOString() as unknown as Date;
 			});
 			const csvData = json2csvParser.parse(reviews);
 

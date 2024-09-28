@@ -28,3 +28,4 @@ export const MotionH2 = motion.h2;
 export const MotionCard = motion.create(Card);
 export const MotionLi = motion.li;
 export const MotionP = motion.p;
+export const MotionFooter = motion.footer;

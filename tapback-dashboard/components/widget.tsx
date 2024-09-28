@@ -1,7 +1,7 @@
 'use client';
-import { X } from 'lucide-react';
+import { MessageSquare, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { ButtonHTMLAttributes, use, useState } from 'react';
+import { useState } from 'react';
 
 type Rating = 'Bad' | 'Decent' | 'Love it!';
 interface FormState {
@@ -18,7 +18,7 @@ const emojis: Record<Rating, string> = {
 };
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function Widget() {
+export default function Widget({ submitLayout = false }: { submitLayout?: boolean }) {
 	const pathName = usePathname();
 	const [formState, setFormState] = useState<FormState>({
 		rating: null,
@@ -78,11 +78,11 @@ export default function Widget() {
 							key={option}
 							type='button'
 							onClick={() => handleRatingChange(option)}
-							className={`w-full flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 box-border text-typography ${
+							className={`w-full flex flex-col items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 box-border text-typography ${
 								formState.rating === option ? 'border-primary' : 'border-primary/10 hover:border-primary'
 							}`}
 						>
-							<span>{emojis[option]}</span>
+							<span className='px-2 sm:px-4 lg:px-6'>{emojis[option]}</span>
 							<span>{option}</span>
 						</button>
 					))}
@@ -129,5 +129,28 @@ export default function Widget() {
 		</div>
 	);
 
-	return <div className='bg-background rounded-lg shadow-lg p-6 w-[28rem] mx-auto'>{preSubmitLayout}</div>;
+	const submittedLayout = (
+		<div className='text-center w-fit h-fit flex flex-col place-content-between'>
+			<div className='flex justify-center mt-8'>
+				<div className='flex justify-center mb-6 relative'>
+					<div>
+						<MessageSquare className='text-muted-foreground size-20' />
+					</div>
+					<div>
+						<MessageSquare className='text-muted-foreground size-12 ml-2 -scale-x-100' />
+					</div>
+				</div>
+			</div>
+			<h2 className='text-2xl text-muted-foreground font-semibold mb-2'>Thank you!</h2>
+			<p className='text-muted-foreground mb-6 font-medium'>Your feedback helps us improve, appreciate the time you took to send us the feedback!</p>
+			<div
+				style={{ transition: 'all 0.2s ease-in-out' }}
+				className='w-full text-center bg-primary text-white px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-medium'
+			>
+				Done
+			</div>
+		</div>
+	);
+
+	return <div className='bg-background rounded-lg shadow-lg p-6 max-w-fit md:w-[28rem] mx-auto'>{submitLayout ? submittedLayout : preSubmitLayout}</div>;
 }

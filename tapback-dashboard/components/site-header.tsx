@@ -3,7 +3,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { logout } from '@/lib/auth.actions';
 import { cardVariants } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { User } from 'lucia';
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';

@@ -1,9 +1,8 @@
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
-import { Lucia, Session, User, UserId } from 'lucia';
+import { Lucia, Session, UserId } from 'lucia';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 import prismaClient from './prisma-client';
-import { Plan } from '@/typings/types';
 import { $Enums, PricingPlan } from '@prisma/client';
 
 const adapter = new PrismaAdapter(prismaClient.session, prismaClient.user);

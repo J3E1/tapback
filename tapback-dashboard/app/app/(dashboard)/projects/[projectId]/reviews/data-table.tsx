@@ -31,6 +31,7 @@ import { useState } from 'react';
 import { MotionButton, MotionDiv, MotionInput, MotionTableRow } from '@/components/motion';
 import { AnimatePresence } from 'framer-motion';
 import ExportReviewsButton from '@/components/export-reviews-button';
+import { Review } from '@prisma/client';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -117,7 +118,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					onChange={event => table.getColumn('email')?.setFilterValue(event.target.value)}
 					className='max-w-sm'
 				/>
-				<ExportReviewsButton reviews={data} />
+				<ExportReviewsButton reviews={data as Review[]} />
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<MotionButton
@@ -147,7 +148,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</MotionDiv>
-			<MotionDiv variants={tableVariants} className='rounded-md border bg-background'>
+			<MotionDiv variants={tableVariants} className='rounded-md border bg-background overflow-scroll'>
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map(headerGroup => (

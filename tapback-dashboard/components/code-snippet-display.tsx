@@ -12,7 +12,8 @@ import { cardVariants, containerVariants } from '@/lib/constants';
 export default function CodeSnippetDisplay({ widgetId }: { widgetId: string }) {
 	const [isCopied, setIsCopied] = useState(false);
 
-	const srcToWidget = process.env.WIDGET_DOWNLOAD_LINK || 'https://v0.dev/';
+	const srcToWidget = process.env.NEXT_PUBLIC_WIDGET_DOWNLOAD_URL;
+	console.log("🚀 ~ file: code-snippet-display.tsx:16 ~ CodeSnippetDisplay ~ srcToWidget:", srcToWidget);
 
 	const codeSnippet = `
 					<script src="${srcToWidget}" data-widget-id="${widgetId}" defer></script>

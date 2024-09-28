@@ -3,7 +3,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { validateRequest } from '@/lib/auth';
 import type { Metadata } from 'next';
 import './globals.css';
-import { getPricingPlanByUserId } from '@/lib/query.services';
+import { Toaster } from '@/components/ui/toaster';
+
 
 export const metadata: Metadata = {
 	title: {
@@ -85,6 +86,7 @@ export default async function RootLayout({
 				<ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
 					<SiteHeader user={userData} />
 					{children}
+					<Toaster />
 				</ThemeProvider>
 			</body>
 		</html>

@@ -6,22 +6,13 @@ import { Button } from '@/components/ui/button';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { MotionDiv } from './motion';
+import { useToast } from '@/hooks/use-toast';
 
 const contactSchema = z.object({
 	name: z.string().min(1, { message: 'Name is required' }),
-	email: z
-		.string()
-		.email({ message: 'Invalid email address' })
-		.min(1, { message: 'Email is required' }),
+	email: z.string().email({ message: 'Invalid email address' }).min(1, { message: 'Email is required' }),
 	company: z.string().optional(),
 	message: z.string().min(1, { message: 'Message is required' }),
 });
@@ -30,6 +21,7 @@ export default function ContactFrom() {
 	const contactForm = useForm<z.infer<typeof contactSchema>>({
 		resolver: zodResolver(contactSchema),
 	});
+	const { toast } = useToast();
 	const itemVariants = {
 		hidden: { opacity: 0, y: 20 },
 		visible: {
@@ -43,7 +35,17 @@ export default function ContactFrom() {
 		},
 	};
 	const onSubmit = async (data: z.infer<typeof contactSchema>) => {
-		console.log(data);
+		console.log('🚀 ~ file: contact-form.tsx:37 ~ onSubmit ~ data:', data);
+		toast({
+			title: 'Sending message...',
+			description: 'Your message is being sent.',
+		});
+		contactForm.reset({
+			name: '',
+			email: '',
+			company: '',
+			message: '',
+		});
 	};
 
 	return (
@@ -57,11 +59,7 @@ export default function ContactFrom() {
 							<FormItem>
 								<FormLabel>Name</FormLabel>
 								<FormControl>
-									<Input
-										disabled={contactForm.formState.isSubmitting}
-										placeholder='Your name'
-										{...field}
-									/>
+									<Input disabled={contactForm.formState.isSubmitting} placeholder='Your name' {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -76,12 +74,7 @@ export default function ContactFrom() {
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input
-										disabled={contactForm.formState.isSubmitting}
-										type='email'
-										placeholder='your@email.com'
-										{...field}
-									/>
+									<Input disabled={contactForm.formState.isSubmitting} type='email' placeholder='your@email.com' {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -96,11 +89,7 @@ export default function ContactFrom() {
 							<FormItem>
 								<FormLabel>Company</FormLabel>
 								<FormControl>
-									<Input
-										disabled={contactForm.formState.isSubmitting}
-										placeholder='Your company name'
-										{...field}
-									/>
+									<Input disabled={contactForm.formState.isSubmitting} placeholder='Your company name' {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -115,11 +104,7 @@ export default function ContactFrom() {
 							<FormItem>
 								<FormLabel>Message</FormLabel>
 								<FormControl>
-									<Textarea
-										disabled={contactForm.formState.isSubmitting}
-										placeholder='How can we help you?'
-										{...field}
-									/>
+									<Textarea disabled={contactForm.formState.isSubmitting} placeholder='How can we help you?' {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

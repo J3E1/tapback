@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { ChevronRight, Github, LinkedinIcon } from 'lucide-react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import {
 	Accordion,
 	AccordionContent,
@@ -10,7 +9,7 @@ import {
 import { accordionData } from '@/lib/constants';
 import Logo from '@/components/logo';
 import { cn } from '@/lib/utils';
-import { MotionDiv, MotionLink } from '@/components/motion';
+import { MotionDiv, MotionFooter, MotionLink } from '@/components/motion';
 import HeroSectionWidget from '@/components/hero-section-widget';
 
 export default function HomePage() {
@@ -49,13 +48,13 @@ export default function HomePage() {
 			<main className='container mx-auto px-4'>
 				{/* Hero Section */}
 				<MotionDiv
-					className='py-20 text-center md:text-left md:flex md:items-center md:justify-between space-x-8'
+					className='py-20 text-center md:text-left md:flex md:items-center md:justify-between md:space-x-8'
 					initial='hidden'
 					animate='visible'
 					variants={containerVariants}>
 					<MotionDiv className='md:w-1/2' variants={childVariants}>
 						<h1 className='text-4xl md:text-5xl font-bold mb-6'>
-							Capture Customer's Voice, Amplify Your Success
+							Capture Customer&apos;s Voice, Amplify Your Success
 						</h1>
 						<p className='mb-8 text-muted-foreground'>
 							Empower your business with instant feedback collection. Create, customize, and embed a
@@ -106,53 +105,6 @@ export default function HomePage() {
 					</div>
 				</MotionDiv>
 
-				{/* Why TapBack Section */}
-				<MotionDiv className='py-20 md:flex md:items-center md:justify-between space-x-8'>
-					<MotionDiv className='md:w-1/2' variants={slideUp}>
-						{/* Placeholder for Tapback dashboard illustration */}
-						<div className='bg-card h-80 rounded-lg'></div>
-					</MotionDiv>
-					<MotionDiv
-						className='md:w-1/2 mb-10 md:mb-0'
-						initial='hidden'
-						whileInView='visible'
-						variants={fadeIn}>
-						<h2 className='text-4xl font-bold mb-6'>Why TapBack?</h2>
-						<p className='text-muted-foreground mb-8'>
-							TapBack is a no-code feedback solution built for any website. Whether you're a small
-							business or a large enterprise, our tool helps you easily gather valuable customer
-							feedback. Gain insights that boost satisfaction and loyalty.
-						</p>
-						<MotionLink
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							href='/app/register'
-							className={cn(buttonVariants({ size: 'lg' }), 'group')}>
-							Get Started Free
-							<ChevronRight className='ml-2 group-hover:translate-x-2 transition-transform duration-300' />
-						</MotionLink>
-					</MotionDiv>
-				</MotionDiv>
-
-				{/* FAQ Section */}
-				<MotionDiv
-					className='py-20'
-					initial='hidden'
-					whileInView='visible'
-					variants={containerVariants}>
-					<h2 className='text-4xl font-bold mb-12 text-center'>FAQ</h2>
-					<Accordion type='single' collapsible>
-						{accordionData.map((item, index) => (
-							<AccordionItem value={`item-${index}`} key={index}>
-								<AccordionTrigger className='text-xl font-semibold'>
-									{item.question}
-								</AccordionTrigger>
-								<AccordionContent className='text-muted-foreground'>{item.answer}</AccordionContent>
-							</AccordionItem>
-						))}
-					</Accordion>
-				</MotionDiv>
-
 				{/* Call to Action Section */}
 				<MotionDiv
 					className='py-20 px-6 bg-primary rounded-lg text-background'
@@ -179,10 +131,67 @@ export default function HomePage() {
 						</MotionLink>
 					</div>
 				</MotionDiv>
+
+				{/* Why TapBack Section */}
+				<MotionDiv className='my-36 md:flex md:items-center md:justify-between md:space-x-8'>
+					<MotionDiv 
+						className='md:w-1/2 mb-10 md:mb-0' 
+						initial='hidden'
+						whileInView='visible'
+						variants={slideUp}
+					>
+						<HeroSectionWidget submitLayout/>
+					</MotionDiv>
+					<MotionDiv
+						className='md:w-1/2 mb-10 md:mb-0 text-center md:text-left'
+						initial='hidden'
+						whileInView='visible'
+						variants={slideUp}>
+						<h2 className='text-4xl font-bold mb-6'>Why TapBack?</h2>
+						<p className='text-muted-foreground mb-8'>
+							TapBack is a no-code feedback solution built for any website. Whether you&apos;re a small
+							business or a large enterprise, our tool helps you easily gather valuable customer
+							feedback. Gain insights that boost satisfaction and loyalty.
+						</p>
+						<MotionLink
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							href='/app/register'
+							className={cn(buttonVariants({ size: 'lg' }), 'group')}>
+							Get Started Free
+							<ChevronRight className='ml-2 group-hover:translate-x-2 transition-transform duration-300' />
+						</MotionLink>
+					</MotionDiv>
+				</MotionDiv>
+
+				{/* FAQ Section */}
+				<MotionDiv
+					className='my-20'
+					initial='hidden'
+					whileInView='visible'
+					variants={containerVariants}>
+					<h2 className='text-4xl font-bold mb-12 text-center'>FAQ</h2>
+					<Accordion type='single' collapsible>
+						{accordionData.map((item, index) => (
+							<AccordionItem value={`item-${index}`} key={index}>
+								<AccordionTrigger className='text-xl font-semibold'>
+									{item.question}
+								</AccordionTrigger>
+								<AccordionContent className='text-muted-foreground'>{item.answer}</AccordionContent>
+							</AccordionItem>
+						))}
+					</Accordion>
+				</MotionDiv>
+
 			</main>
 
 			{/* Footer */}
-			<footer className='bg-card/40 mt-12 py-12'>
+			<MotionFooter 
+				initial='hidden'
+				whileInView='visible' 
+				variants={fadeIn}
+				className='bg-card/40 mt-12 py-12'
+			>
 				<div className='flex justify-center my-18'>
 					<Logo className='size-32 text-primary spinning-logo' />
 				</div>
@@ -197,7 +206,7 @@ export default function HomePage() {
 						<Github className='size-8 text-muted-foreground hover:text-primary transition-colors' />
 					</a>
 				</div>
-			</footer>
+			</MotionFooter>
 		</div>
 	);
 }

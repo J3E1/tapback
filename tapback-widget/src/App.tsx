@@ -45,7 +45,8 @@ export default function App({ widgetId }: { widgetId?: string }) {
 
 	useEffect(() => {
 		document.addEventListener('mousedown', handleClickOutside);
-		API_HOST && widgetId && getStyles();
+		if (widgetId && API_HOST) getStyles();
+		console.log("🚀 ~ file: App.tsx:53 ~ useEffect ~ widgetId && API_HOST:", widgetId, API_HOST);
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};

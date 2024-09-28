@@ -1,5 +1,3 @@
-import { Toaster } from '@/components/ui/toaster';
-
 export default function AppLayout({
 	children,
 }: Readonly<{
@@ -8,7 +6,6 @@ export default function AppLayout({
 	return (
 		<div className='bg-background flex flex-grow'>
 			{children}
-			<Toaster />
 		</div>
 	);
 }

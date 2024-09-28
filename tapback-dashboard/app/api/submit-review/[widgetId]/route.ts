@@ -44,6 +44,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 								},
 							},
 						},
+						siteUrl: true,
 					},
 				},
 				projectId: true,
@@ -51,6 +52,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 		});
 		if (!widget) {
 			return new NextResponse(JSON.stringify({ success: false, error: 'Project not found' }), { status: 404 });
+		}
+		const requestOrigin = req.headers.get('origin'); // Get the origin of the request
+		const widgetSiteUrl = widget.project?.siteUrl;
+
+		if (widgetSiteUrl && requestOrigin) {
+			// Compare only the hostname to avoid issues with different protocols/ports
+			const requestHostname = new URL(requestOrigin).hostname;
+			const widgetHostname = new URL(widgetSiteUrl).hostname;
+
+			// Ensure the request is coming from the correct domain
+			if (requestHostname !== widgetHostname) {
+				return new NextResponse(JSON.stringify({ success: false, error: 'Invalid request' }), { status: 403 });
+			}
+		} else {
+			// If siteUrl or origin is missing, you might want to handle this differently.
+			return new NextResponse(JSON.stringify({ success: false, error: 'Invalid request origin or widget site URL' }), { status: 403 });
 		}
 		const reviewCount = await prismaClient.review.count({
 			where: {
