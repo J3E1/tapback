@@ -12,7 +12,7 @@ import {
 import { Metadata } from 'next';
 import ContactFrom from '@/components/contact-form';
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
 	title: 'Contact Sales',
 };
 
