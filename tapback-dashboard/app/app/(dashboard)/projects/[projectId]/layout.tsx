@@ -20,7 +20,7 @@ export default async function ProjectLayout({
 	const projects = response.projects;
 
 	return (
-		<div className='flex-grow flex'>
+		<div className='flex-grow flex w-screen'>
 			<TooltipProvider delayDuration={0}>
 				<Sidebar
 					projects={
@@ -33,7 +33,7 @@ export default async function ProjectLayout({
 					}
 				/>
 			</TooltipProvider>
-			<main className='w-full flex flex-col sm:gap-4 p-4 md:p-6'>{children}</main>
+			<main className='flex-grow flex flex-col sm:gap-4 p-4 md:p-6 overflow-x-hidden'>{children}</main>
 		</div>
 	);
 }

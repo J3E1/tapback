@@ -116,7 +116,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					placeholder='Filter emails...'
 					value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
 					onChange={event => table.getColumn('email')?.setFilterValue(event.target.value)}
-					className='max-w-sm'
+					className='max-w-sm mr-2'
 				/>
 				<ExportReviewsButton reviews={data as Review[]} />
 				<DropdownMenu>
@@ -148,7 +148,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</MotionDiv>
-			<MotionDiv variants={tableVariants} className='rounded-md border bg-background overflow-scroll'>
+			<MotionDiv variants={tableVariants} className='rounded-md border bg-background hide-scrollbar'>
 				<Table>
 					<TableHeader>
 						{table.getHeaderGroups().map(headerGroup => (
@@ -175,7 +175,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 										custom={i}
 										initial='hidden'
 										animate='visible'
-										exit='exit'
+										// exit='exit'
 										data-state={row.getIsSelected() && 'selected'}>
 										{row.getVisibleCells().map(cell => (
 											<TableCell key={cell.id}>

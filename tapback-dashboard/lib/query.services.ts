@@ -10,6 +10,7 @@ export async function getAllProjects() {
 		}
 		const projects = await prismaClient.project.findMany({
 			where: { userId: user.id },
+			orderBy: { updatedAt: 'desc' },
 		});
 
 		return { success: true, projects, projectLimit: user.pricingPlan?.projectLimit };
