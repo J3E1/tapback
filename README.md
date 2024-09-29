@@ -2,7 +2,7 @@
 
 **TapBack** is a feedback widget SaaS platform that allows users to add customizable feedback widgets to their websites. It offers a comprehensive dashboard for managing feedback submissions, reviewing analytics, and customizing the widget's look and feel.
 
-![Landing Page](tapback-dashboard\public\og-image.jpg)
+![Landing Page](tapback-dashboard/public/og-image.jpg)
 
 ## Features
 
@@ -15,13 +15,13 @@
 
 ## Screenshots
 
-![Dashboard Screenshot](tapback-dashboard\public\dashboard.png)
+![Dashboard Screenshot](tapback-dashboard/public/dashboard.png)
 
-![Reviews Table Screenshot](tapback-dashboard\public\reviews.png)
+![Reviews Table Screenshot](tapback-dashboard/public/reviews.png)
 
-![Customize Your Widget Screenshot](tapback-dashboard\public\customize.png)
+![Customize Your Widget Screenshot](tapback-dashboard/public/customize.png)
 
-![Embed Widget Screenshot](tapback-dashboard\public\embed.png)
+![Embed Widget Screenshot](tapback-dashboard/public/embed.png)
 
 ## Tech Stack
 
