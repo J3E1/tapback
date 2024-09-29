@@ -125,7 +125,7 @@ export default function HomePage() {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							href='/app/register'
-							className={cn(buttonVariants({ size: 'lg' }), 'border-2 border-background mr-20 hover:bg-background hover:text-foreground group')}>
+							className={cn(buttonVariants({ size: 'lg' }), 'border-2 border-background md:mr-20 hover:bg-background hover:text-foreground group')}>
 							Get Started Free
 							<ChevronRight className='ml-2 group-hover:translate-x-2 transition-transform duration-300' />
 						</MotionLink>
@@ -174,7 +174,7 @@ export default function HomePage() {
 					<Accordion type='single' collapsible>
 						{accordionData.map((item, index) => (
 							<AccordionItem value={`item-${index}`} key={index}>
-								<AccordionTrigger className='text-xl font-semibold'>
+								<AccordionTrigger className='text-xl font-semibold text-left'>
 									{item.question}
 								</AccordionTrigger>
 								<AccordionContent className='text-muted-foreground'>{item.answer}</AccordionContent>
@@ -199,10 +199,10 @@ export default function HomePage() {
 					© 2024 TapBack. All rights reserved.
 				</div>
 				<div className='flex gap-4 justify-center mt-4'>
-					<a href='https://linkedin.com' target='_blank' rel='noopener noreferrer'>
+					<a href='https://www.linkedin.com/in/jeel-khuman/' target='_blank' rel='noopener noreferrer'>
 						<LinkedinIcon className='size-8 text-muted-foreground hover:text-primary transition-colors' />
 					</a>
-					<a href='https://instagram.com' target='_blank' rel='noopener noreferrer'>
+					<a href='https://github.com/J3E1/tapback/' target='_blank' rel='noopener noreferrer'>
 						<Github className='size-8 text-muted-foreground hover:text-primary transition-colors' />
 					</a>
 				</div>

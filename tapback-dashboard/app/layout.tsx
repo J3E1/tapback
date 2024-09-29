@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 	description:
 		'TapBack: Create customizable feedback widgets for your website. Embed with a single line of code and start collecting valuable customer insights instantly.',
 	keywords: ['customer feedback', 'website widget', 'user insights', 'customer experience', 'feedback collection', 'SaaS', 'analytics dashboard'],
-	authors: [{ name: 'J3E1' }],
-	creator: 'J3E1',
-	publisher: 'J3E1',
+	authors: [{ name: 'JEEL' }],
+	creator: 'JEEL',
+	publisher: 'JEEL',
 	formatDetection: {
 		email: false,
 		address: false,
@@ -26,11 +26,11 @@ export const metadata: Metadata = {
 		title: 'TapBack - Effortless Customer Feedback Collection',
 		description:
 			'Embed customizable feedback widgets on your website with a single line of code. Gather insights, analyze data, and improve customer experience.',
-		url: 'https://www.tapback.com',
+		url: 'https://tapback.vercel.app/',
 		siteName: 'TapBack',
 		images: [
 			{
-				url: 'https://www.tapback.com/og-image.jpg',
+				url: 'https://tapback.vercel.app/og-image.jpg',
 				width: 1200,
 				height: 630,
 				alt: 'TapBack customer feedback widget showcase',
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'TapBack - Customer Feedback Made Simple',
 		description: 'Create, customize, and embed feedback widgets. One line of code to start collecting valuable customer insights.',
-		creator: '@tapback',
-		images: ['https://www.tapback.com/twitter-image.jpg'],
+		creator: '@J3E1',
+		images: ['https://tapback.vercel.app/og-image.jpg'],
 	},
 	robots: {
 		index: true,
@@ -59,10 +59,8 @@ export const metadata: Metadata = {
 	},
 	icons: {
 		icon: '/logo.svg',
-		shortcut: '/favicon-16x16.png',
-		apple: '/apple-touch-icon.png',
+		shortcut: '/logo.svg',
 	},
-	// manifest: '/manifest.json',
 	category: 'Technology',
 };
 

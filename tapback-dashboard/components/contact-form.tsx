@@ -35,7 +35,6 @@ export default function ContactFrom() {
 		},
 	};
 	const onSubmit = async (data: z.infer<typeof contactSchema>) => {
-		console.log('🚀 ~ file: contact-form.tsx:37 ~ onSubmit ~ data:', data);
 		toast({
 			title: 'Sending message...',
 			description: 'Your message is being sent.',
