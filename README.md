@@ -46,13 +46,9 @@ git clone https://github.com/J3E1/tapback.git
 cd tapback
 ```
 
-## Installation
+## Dashboard Features
 
-### Dashboard
-
-### Dashboard Features
-
-Once logged in, users can:
+#### Once logged in, users can:
 
 * **Create Projects**: Add new projects to manage feedback for different websites.
 * **Customize Widget**: Tailor the widget to your brand's color scheme.
