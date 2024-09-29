@@ -37,7 +37,7 @@ export default function ContactFrom() {
 	const onSubmit = async (data: z.infer<typeof contactSchema>) => {
 		toast({
 			title: 'Sending message...',
-			description: 'Your message is being sent.',
+			description: `We will get back to you at ${data.email} as soon as possible.`,
 		});
 		contactForm.reset({
 			name: '',
