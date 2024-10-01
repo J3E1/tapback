@@ -54,7 +54,7 @@ export async function register(formData: RegisterSchema) {
 		});
 
 		// Create a new session for the user.
-		const session = await lucia.createSession(userId, { plan: user.pricingPlan?.name, projectLimit: user.pricingPlan?.projectLimit || 0 });
+		const session = await lucia.createSession(userId, { });
 
 		// Set the session cookie on the client.
 		const sessionCookie = lucia.createSessionCookie(session.id);
