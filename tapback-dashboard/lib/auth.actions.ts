@@ -37,7 +37,7 @@ export async function register(formData: RegisterSchema) {
 			});
 
 			// Create a new user in the database.
-			const user = await prismaClient.user.create({
+			await prismaClient.user.create({
 				data: {
 					id: userId,
 					name: name,
