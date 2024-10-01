@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { argonConfig } from './constants';
 import prismaClient from './prisma-client';
 import { loginSchema, LoginSchema, RegisterSchema, registerSchema } from './schemas';
-import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 /**
  * Registers a new user in the database and creates a new session for it.
